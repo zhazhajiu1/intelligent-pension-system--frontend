@@ -173,9 +173,9 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           const user = {
-            username: this.ruleForm.username,
-            phone: this.ruleForm.phone,
-            password: this.ruleForm.pwd
+            // username: this.ruleForm.username,
+            // phone: this.ruleForm.phone,
+            // password: this.ruleForm.pwd
           }
           api.register(user).then(res => {
             this.$message({
@@ -255,7 +255,7 @@ $light_gray: #eee;
   background-color: $bg;
   overflow: hidden;
 
-  background-image: url('../../assets/350.jpg');
+  background-image: url('../../assets/home.jpg');
   background-size: 100%;
 
   .header {

@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">学生行为监测系统</h3>
+        <h3 class="title">IYing充满爱养老系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -198,7 +198,7 @@ $light_gray:#eee;
   display: flex;
   align-items: center;
 
-  background-image: url('../../assets/350.jpg');
+  background-image: url('../../assets/home.jpg');
   background-size: 100%;
 
   .login-form {
