@@ -30,7 +30,7 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [ 
+export const constantRoutes = [
 
   {
     path: '/register',
@@ -67,82 +67,82 @@ export const constantRoutes = [
     path: '/userInfo',
     component: Layout,
     redirect: '/userInfo/index',
-    children:[{
+    children: [{
       path: 'index',
       name: 'userInfo',
       component: () => import('@/views/userInfo/index'),
-      meta: { title: '个人信息', icon: 'user'},
-    }]    
+      meta: { title: '个人信息', icon: 'user' }
+    }]
   },
 
   {
     path: '/video',
     component: Layout,
     redirect: '/video/index',
-    children:[{
+    children: [{
       path: 'index',
       name: 'video',
       component: () => import('@/views/video/index'),
-      meta: { title: '监控视频', icon: 'el-icon-video-camera'},
-    }]    
-  },
+      meta: { title: '监控视频', icon: 'el-icon-video-camera' }
+    }]
+  }
 
   // // 404 page must be placed at the end !!!
   // { path: '*', redirect: '/404', hidden: true }
 ]
 
-//异步挂载的路由
-//动态需要根据权限加载的路由表
-//每个页面给哪些角色放行，在roles数组提前写好即可
+// 异步挂载的路由
+// 动态需要根据权限加载的路由表
+// 每个页面给哪些角色放行，在roles数组提前写好即可
 export const asyncRoutes = [
-  //用户设置
+  // 用户设置
   {
     path: '/sys',
     component: Layout,
     redirect: '/sys/user',
     name: 'sysManage',
-    meta: { title: '系统管理', icon: 'example', roles: ['admin']},
+    meta: { title: '系统管理', icon: 'example', roles: ['admin'] },
     children: [
       {
         path: 'user',
         name: 'user',
         component: () => import('@/views/sys/user'),
-        meta: { title: '用户管理', icon: 'user', roles: ['admin']}
+        meta: { title: '用户管理', icon: 'user', roles: ['admin'] }
       },
       {
         path: 'data',
         name: 'data',
         component: () => import('@/views/sys/data'),
-        meta: { title: '照片数据管理', icon: 'el-icon-s-data', roles: ['admin']}
+        meta: { title: '照片数据管理', icon: 'el-icon-s-data', roles: ['admin'] }
       },
       {
         path: 'videoData',
         name: 'videoData',
         component: () => import('@/views/sys/videoData'),
-        meta: { title: '视频数据管理', icon: 'el-icon-s-data', roles: ['admin']}
+        meta: { title: '视频数据管理', icon: 'el-icon-s-data', roles: ['admin'] }
       }
     ]
   },
-  
+
   {
     path: '/historyData',
     component: Layout,
     redirect: '/historyData/index',
     name: 'historyData',
-    meta: { title: '历史数据', icon: 'el-icon-s-data', roles: ['visitor']},
-    children:[
+    meta: { title: '历史数据', icon: 'el-icon-s-data', roles: ['visitor'] },
+    children: [
       {
         path: 'index',
         name: 'historyData',
         component: () => import('@/views/historyData/index'),
-        meta: { title: '照片数据', icon: 'el-icon-s-data', roles: ['visitor']}
+        meta: { title: '照片数据', icon: 'el-icon-s-data', roles: ['visitor'] }
       },
       {
         path: 'videoIndex',
         name: 'historyData',
         component: () => import('@/views/historyData/videoIndex'),
-        meta: { title: '视频数据', icon: 'el-icon-s-data', roles: ['visitor']}
-      }      
+        meta: { title: '视频数据', icon: 'el-icon-s-data', roles: ['visitor'] }
+      }
     ]
   },
 

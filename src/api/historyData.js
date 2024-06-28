@@ -18,14 +18,14 @@ export default {
     return request({
       url: `/video/delete`,
       method: 'get',
-      params: {id: id}
+      params: { id: id }
     })
   },
   getDataURL(id) {
     return request({
       url: `/video/photoURL`,
       method: 'get',
-      params: {id: id}
+      params: { id: id }
     })
   },
   getVideoList(searchModel) {
@@ -45,14 +45,14 @@ export default {
     return request({
       url: `/video/deleteVideo`,
       method: 'get',
-      params: {id: id}
+      params: { id: id }
     })
   },
   getVideoURL(id) {
     return request({
       url: `/video/videoURL`,
       method: 'get',
-      params: {id: id}
+      params: { id: id }
     })
   },
   getGraphURL() {

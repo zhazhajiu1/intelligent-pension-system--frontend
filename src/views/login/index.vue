@@ -111,12 +111,21 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
+
+          // 实际上的登录逻辑
+          // this.$store.dispatch('user/login', this.loginForm).then(() => {
+          //   this.$router.push({ path: this.redirect || '/' })
+          //   this.loading = false
+          // }).catch(() => {
+          //   this.loading = false
+
+          // })
+
+          // 直接跳转到系统的主页面
+        this.$router.push({ path: this.redirect || '/' })
+        this.loading = false
+
+
         } else {
           console.log('error submit!!')
           return false

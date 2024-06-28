@@ -37,14 +37,14 @@ export default {
     return request({
       url: `/user/detail`,
       method: 'get',
-      params: {id: id}
+      params: { id: id }
     })
   },
   deleteUserById(id) {
     return request({
       url: `/user/delete`,
       method: 'get',
-      params: {id: id}
+      params: { id: id }
     })
   },
   updateUser(user) {
@@ -55,9 +55,9 @@ export default {
     })
   },
   saveUser(user) {
-    if(user.id==null&&user.id == undefined) {
-      return this.addUser(user);
+    if (user.id === null && user.id === undefined) {
+      return this.addUser(user)
     }
-    return this.updateUser(user);
+    return this.updateUser(user)
   }
 }

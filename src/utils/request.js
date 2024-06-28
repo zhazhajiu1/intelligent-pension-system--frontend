@@ -13,26 +13,26 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   async config => {
-    // do something before request is sent
+    // 在发送请求之前做些什么
 
     if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
+      // 让每个请求携带自定义 token
+      // ['X-Token'] 是自定义的请求头键名
+      // 根据实际情况修改
       config.headers['X-Token'] = getToken()
     }
 
-    // Get CSRF token
-    //const csrfToken = await getCSRFToken();
+    // 获取 CSRF token
+    // const csrfToken = await getCSRFToken();
 
-    // Set CSRF token in headers
-    //config.headers['X-CSRFToken'] = csrfToken;
+    // 设置 CSRF token 到请求头
+    // config.headers['X-CSRFToken'] = csrfToken;
 
     return config
   },
   error => {
-    // do something with request error
-    console.log(error) // for debug
+    // 请求错误时做些什么
+    console.log(error) // 调试用
     return Promise.reject(error)
   }
 )
@@ -90,19 +90,19 @@ service.interceptors.response.use(
 )
 
 // Function to get CSRF token
-function getCSRFToken() {
-  return new Promise((resolve, reject) => {
-    axios.get('http://127.0.0.1:8000/getcsrf/')
-      .then(response => {
-        const csrfToken = response.data.csrfToken;
-        // 将CSRF令牌设置为请求头
-        axios.defaults.headers.common['X-Csrftoken'] = csrfToken;
-        resolve(csrfToken);
-      })
-      .catch(error => {
-        reject(error);
-      });
-  });
-}
+// function getCSRFToken() {
+//   return new Promise((resolve, reject) => {
+//     axios.get('http://127.0.0.1:8000/getcsrf/')
+//       .then(response => {
+//         const csrfToken = response.data.csrfToken
+//         // 将CSRF令牌设置为请求头
+//         axios.defaults.headers.common['X-Csrftoken'] = csrfToken
+//         resolve(csrfToken)
+//       })
+//       .catch(error => {
+//         reject(error)
+//       })
+//   })
+// }
 
 export default service

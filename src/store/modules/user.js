@@ -61,7 +61,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        if(data.roles && data.roles.length > 0) {
+        if (data.roles && data.roles.length > 0) {
           commit('SET_ROLES', data.roles)
         } else {
           reject('getInfo: roles must be a not-null array')
@@ -70,7 +70,7 @@ const actions = {
         const { name, avatar, id } = data
 
         commit('SET_ID', id)
-        console.log("id号"+id)
+        console.log('id号' + id)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         resolve(data)
