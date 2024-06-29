@@ -1,73 +1,82 @@
 <template>
-    <div class="register-container">
-      <article class="header">
-        <header>
-          <el-avatar icon="el-icon-user-solid" shape="circle" />
-          <span class="login">
-            <em class="bold">已有账号？</em>
-            <a href="/login">
-              <el-button type="primary" size="mini">登录</el-button>
-            </a>
-          </span> 
-        </header>
-      </article>
-      <section>
-        <el-form
-          ref="ruleForm"
-          :model="ruleForm"
-          :rules="rules"
-          label-width="100px" 
-          autocomplete="off"
-          size="medium"
-          style="position: relative; top:50px; left: 500px;"
-        >
-          <div style="padding-top: 10px">
-            <el-form-item label="用户名" prop="username" >
-              <el-col :span="5">
-                <el-input v-model="ruleForm.username" placeholder="请输入您的用户名" />
-              </el-col>
-            </el-form-item>
-            <el-form-item label="手机号码" prop="username" >
-              <el-col :span="5">
-                <el-input v-model="ruleForm.phone" placeholder="请输入您的手机号码" />
-              </el-col>
-            </el-form-item>            
-            <el-form-item label="密码" prop="pwd">
-              <el-col :span="5">
-                <el-input v-model="ruleForm.pwd" type="password" />
-              </el-col>
-            </el-form-item>
-            <el-form-item label="确认密码" prop="cpwd">
-              <el-col :span="5">
-                <el-input v-model="ruleForm.cpwd" type="password" />
-              </el-col>
-            </el-form-item>
-            <el-form-item label="验证码" prop="code">
-              <el-col :span="5">
-                <el-input v-model="ruleForm.code" maxlength="4" placeholder="请输入验证码"  />
-              </el-col>
-              <el-col :span="5" >
-                <div  width="100%" @click="refreshCode">
-                  <!--验证码组件-->
-                  <s-identify :identifyCode="identifyCode" style="margin-top: 4px"></s-identify>
-                </div>
-              </el-col>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                style="width: 20%"
-                @click="register"
-              >注册</el-button>
-            </el-form-item>
-          </div>
-        </el-form>
-      </section>
-  
-      <div class="error">{{ error }}</div>
-    </div>
-  </template>
-  
+  <div class="register-container">
+    <article class="header">
+      <header>
+        <el-avatar icon="el-icon-user-solid" shape="circle" />
+        <span class="login">
+          <em class="bold">已有账号？</em>
+          <router-link to="/login">
+            <el-button type="primary" size="mini">登录</el-button>
+          </router-link>
+        </span>
+      </header>
+    </article>
+    <section>
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" autocomplete="off" size="medium"
+        style="position: relative; top:50px; left: 500px;">
+        <div style="padding-top: 10px">
+
+          <el-form-item label="角色" prop="userrole">
+            <el-col :span="5">
+              <el-radio v-model="ruleForm.userrole" label="2">义工</el-radio>
+              <el-radio v-model="ruleForm.userrole" label="1">员工</el-radio> </el-col>
+          </el-form-item>
+
+          <el-form-item label="手机号码" prop="phone">
+            <el-col :span="5">
+              <el-input v-model="ruleForm.phone" placeholder="请输入您的手机号码" />
+            </el-col>
+            <el-col :span="5">
+              <div class="error">{{ error }}</div> <!-- 显示错误消息 -->
+            </el-col>
+          </el-form-item>
+
+          <el-form-item label="用户名" prop="username">
+            <el-col :span="5">
+              <el-input v-model="ruleForm.username" placeholder="请输入您的用户名" />
+            </el-col>
+          </el-form-item>
+
+          <el-form-item label="性别" prop="usersex">
+            <el-col :span="5">
+              <el-radio v-model="ruleForm.usersex" label="f">女</el-radio>
+              <el-radio v-model="ruleForm.usersex" label="m">男</el-radio> </el-col>
+          </el-form-item>
+
+          <el-form-item label="密码" prop="pwd">
+            <el-col :span="5">
+              <el-input v-model="ruleForm.pwd" type="password" />
+            </el-col>
+          </el-form-item>
+
+          <el-form-item label="确认密码" prop="cpwd">
+            <el-col :span="5">
+              <el-input v-model="ruleForm.cpwd" type="password" />
+            </el-col>
+          </el-form-item>
+
+          <el-form-item label="验证码" prop="code">
+            <el-col :span="5">
+              <el-input v-model="ruleForm.code" maxlength="4" placeholder="请输入验证码" />
+            </el-col>
+            <el-col :span="5">
+              <div width="100%" @click="refreshCode">
+                <!--验证码组件-->
+                <s-identify :identifyCode="identifyCode" style="margin-top: 4px"></s-identify>
+              </div>
+            </el-col>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" style="width: 20%" @click="register">注册</el-button>
+          </el-form-item>
+        </div>
+      </el-form>
+    </section>
+
+    <div class="error">{{ error }}</div>
+  </div>
+</template>
+
 <script>
 // import Vue from 'vue'
 import api from '@/api/register'
@@ -78,7 +87,7 @@ import SIdentify from './verify.vue'
 export default {
   // name: 'Register',
   name: 'register',
-  components: {SIdentify},
+  components: { SIdentify },
   data() {
     return {
       statusMsg: '',
@@ -86,29 +95,50 @@ export default {
       // isDisable: false,
       // codeLoading: false,
       ruleForm: {
+        userrole: '',
+        usersex: '',
         username: '',
         phone: '',
         code: '',
         pwd: '',
         cpwd: ''
       },
-       
+
       identifyCodes: '1234567890abcdefjhijklinopqrsduvwxyz',//随机串内容
       identifyCode: '',
 
       rules: {
+        userrole: [{
+          required: true,
+          type: 'string',
+          message: '请选择身份',
+          trigger: 'blur'
+        }],
+        usersex: [{
+          required: true,
+          type: 'string',
+          message: '请选择性别',
+          trigger: 'blur'
+        }],
         username: [{
           required: true,
           type: 'string',
           message: '请输入用户名',
           trigger: 'blur'
         }],
-        phone: [{
-          required: true,
-          type: 'string',
-          message: '请输入手机号码',
-          trigger: 'blur'
-        }],
+        phone: [
+          {
+            required: true,
+            type: 'string',
+            message: '请输入手机号码',
+            trigger: 'blur'
+          },
+          {
+            pattern: /^1\d{10}$/,
+            message: '手机号码格式不正确',
+            trigger: 'blur'
+          }
+        ],
         code: [{
           required: true,
           type: 'string',
@@ -136,14 +166,14 @@ export default {
           },
           trigger: 'blur'
         }]
- 
+
       }
     }
   },
   mounted() {
-      // 初始化验证码
-      this.identifyCode = ''
-      this.makeCode(this.identifyCodes, 4)
+    // 初始化验证码
+    this.identifyCode = ''
+    this.makeCode(this.identifyCodes, 4)
   },
   methods: {
     // 重置验证码
@@ -161,21 +191,23 @@ export default {
     },
 
     // 用户注册
-    register: function() {
-      
+    register: function () {
+
       //验证码验证
       if (this.ruleForm.code.toLowerCase() !== this.identifyCode.toLowerCase()) {
-              this.$message.error('请填写正确验证码')
-              this.refreshCode()
-              return
-          }
-      
+        this.$message.error('请填写正确验证码')
+        this.refreshCode()
+        return
+      }
+
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           const user = {
-            // username: this.ruleForm.username,
-            // phone: this.ruleForm.phone,
-            // password: this.ruleForm.pwd
+            UserRole: this.ruleForm.userrole,
+            UserName: this.ruleForm.username,
+            Password: this.ruleForm.pwd,
+            Sex: this.ruleForm.usersex,
+            Phone: this.ruleForm.phone,
           }
           api.register(user).then(res => {
             this.$message({
@@ -243,7 +275,7 @@ $cursor: #fff;
   }
 }
 </style>
-  
+
 <style lang="scss" scoped>
 $bg: #2d3a4b;
 $dark_gray: #889aa4;
@@ -255,7 +287,7 @@ $light_gray: #eee;
   background-color: $bg;
   overflow: hidden;
 
-  background-image: url('../../assets/home.jpg');
+  background-image: url('../../assets/elds3.jpg');
   background-size: 100%;
 
   .header {
@@ -316,4 +348,3 @@ $light_gray: #eee;
 <style scoped>
 /* 修改验证器样式 */
 </style>
-

@@ -6,7 +6,7 @@
         <el-col :span="20">
           <el-input v-model="searchModel.username" placeholder="用户名" clearable></el-input>
           <el-input v-model="searchModel.phone" placeholder="手机号" clearable></el-input>
-          <el-button @click="getUserList" type="primary" round icon="el-icon-search">查询</el-button>
+          <el-button @click="getUserList" type="primary" round icon="el-icon-search">老人查询</el-button>
         </el-col>        
         <el-button @click="openEditUI(null)" type="primary" icon="el-icon-plus" round>添加用户</el-button>
         <el-col :span="5"> </el-col>

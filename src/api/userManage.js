@@ -6,6 +6,7 @@ import request from '@/utils/request'
 //     params
 //   })
 // }
+
 export default {
   getUserList(searchModel) {
     return request({
@@ -19,6 +20,7 @@ export default {
       }
     })
   },
+
   addUser(user) {
     return request({
       url: '/user/add',

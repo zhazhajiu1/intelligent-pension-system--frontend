@@ -21,7 +21,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-button type="primary" round icon="el-icon-search" @click="getDataList">查询</el-button>
+            <el-button type="primary" round icon="el-icon-search" @click="getDataList">义工查询</el-button>
           </div>          
         </el-col>
         <el-col :span="4"> </el-col>

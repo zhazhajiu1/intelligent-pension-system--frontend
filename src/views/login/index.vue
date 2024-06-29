@@ -1,57 +1,52 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
+      label-position="left">
       <div class="title-container">
         <h3 class="title">IYing充满爱养老系统</h3>
       </div>
+
+      <el-form-item prop="userrole">
+        <span class="svg-container">
+          <svg-icon icon-class="role" />
+        </span>
+        <el-radio v-model="loginForm.userrole" label="2">义工</el-radio>
+        <el-radio v-model="loginForm.userrole" label="1">员工</el-radio>
+        <el-radio v-model="loginForm.userrole" label="0">管理员</el-radio>
+      </el-form-item>
 
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="用户名"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
+        <el-input ref="username" v-model="loginForm.username" placeholder="用户名" name="username" type="text" tabindex="1"
+          auto-complete="on" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="密码"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
+        <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType" placeholder="密码"
+          name="password" tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin">登 录</el-button>
 
       <div>
         <p class="tips">
           <router-link to="/register" type="primary">还没有帐号？立即注册</router-link>
           <router-view></router-view>
-        </p>        
+        </p>
       </div>
     </el-form>
   </div>
 </template>
+
 
 <script>
 import { validUsername } from '@/utils/validate'
@@ -75,11 +70,15 @@ export default {
       }
     }
     return {
+      radio: '1',
+
       loginForm: {
+        userrole: '2',  // 默认身份
         username: 'admin',
         password: '111111'
       },
       loginRules: {
+        userrole: [{ required: true, message: '请选择身份', trigger: 'change' }],
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
@@ -90,7 +89,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -112,18 +111,17 @@ export default {
         if (valid) {
           this.loading = true
 
-          // 实际上的登录逻辑
-          // this.$store.dispatch('user/login', this.loginForm).then(() => {
-          //   this.$router.push({ path: this.redirect || '/' })
-          //   this.loading = false
-          // }).catch(() => {
-          //   this.loading = false
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$router.push({ path: this.redirect || '/' })
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
 
-          // })
+          })
 
           // 直接跳转到系统的主页面
-        this.$router.push({ path: this.redirect || '/' })
-        this.loading = false
+          // this.$router.push({ path: this.redirect || '/' })
+          // this.loading = false
 
 
         } else {
@@ -141,8 +139,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -185,9 +183,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
@@ -198,7 +196,7 @@ $light_gray:#eee;
   display: flex;
   align-items: center;
 
-  background-image: url('../../assets/home.jpg');
+  background-image: url('../../assets/elds3.jpg');
   background-size: 100%;
 
   .login-form {
@@ -210,6 +208,14 @@ $light_gray:#eee;
     overflow: hidden;
     background-color: #889aa4;
     border-radius: 16px;
+  }
+
+  .el-radio__label {
+    color: $light_gray;
+  }
+
+  .el-radio.is-checked .el-radio__label {
+    color: #000; // 选中后的字体颜色，可以根据需要调整
   }
 
   .tips {

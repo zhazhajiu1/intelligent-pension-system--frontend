@@ -21,7 +21,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-button type="primary" round icon="el-icon-search" @click="getVideoList">查询</el-button>
+            <el-button type="primary" round icon="el-icon-search" @click="getVideoList">管理员查询</el-button>
           </div>          
         </el-col>
         <el-col :span="4"> </el-col>
@@ -52,6 +52,7 @@
         </el-table-column>
       </el-table>
     </el-card>
+
     <!-- 分页组件 -->
     <!-- <el-pagination
       @size-change="handleSizeChange"
@@ -63,6 +64,7 @@
       :total="total"
     >
     </el-pagination> -->
+    
     <!-- 视频展示 -->
     <el-dialog v-dialogDrag :title="title" :visible.sync="dialogFormVisible" @close="resetForm">
       <div id="app">

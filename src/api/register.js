@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export default {
   register(data) {
     return request({
-      url: '/register',
+      url: '/user/register',
       method: 'post',
       data: data
     })

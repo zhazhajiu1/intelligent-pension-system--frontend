@@ -1,4 +1,4 @@
-<template>  
+<template>
   <div class="dashboard-container">
     <div class="dashboard-text" style="font-size: 40px">
       <i class="el-icon-user-solid"></i>
@@ -6,7 +6,7 @@
     </div>
     <el-divider content-position="left">历史人数数据</el-divider>
     <div class="block">
-      <img :src="imgSource"/>
+      <img :src="imgSource" />
     </div>
   </div>
 </template>
@@ -29,9 +29,9 @@ export default {
   },
   methods: {
     getGraph() {
-      api.getGraphURL().then( response => {
+      api.getGraphURL().then(response => {
         this.imgSource = response.src
-      })     
+      })
     }
   },
   created() {
@@ -45,6 +45,7 @@ export default {
   &-container {
     margin: 30px;
   }
+
   &-text {
     font-size: 30px;
     line-height: 46px;
@@ -53,19 +54,25 @@ export default {
 </style>
 
 <style>
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 300px;
-    margin: 0;
-  }
+.dashboard-container {
+  width: 100%;
+  height: 800px;
+  background-image: url('../../assets/home1.png');
+}
 
-  .el-carousel__item:nth-child(2n) {
-     background-color: #99a9bf;
-  }
-  
-  .el-carousel__item:nth-child(2n+1) {
-     background-color: #d3dce6;
-  }
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
+}
 </style>

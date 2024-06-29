@@ -13,9 +13,9 @@ import NotFound from '@/views/404'
 import Dashboard from '@/views/dashboard/index'
 import UserInfo from '@/views/userInfo/index'
 import Video from '@/views/video/index'
-import UserManage from '@/views/sys/user'
-import DataManage from '@/views/sys/data'
-import VideoDataManage from '@/views/sys/videoData'
+import UserManage from '@/views/sys/elds'
+import DataManage from '@/views/sys/volunteers'
+import VideoDataManage from '@/views/sys/staff.vue'
 import HistoryDataPhoto from '@/views/historyData/index'
 import HistoryDataVideo from '@/views/historyData/videoIndex'
 
@@ -67,7 +67,7 @@ export const constantRoutes = [
       path: 'index',
       name: 'video',
       component: Video,
-      meta: { title: '监控视频', icon: 'el-icon-video-camera' }
+      meta: { title: '实时保护', icon: 'el-icon-video-camera' }
     }]
   }
 ]
@@ -96,7 +96,7 @@ export const asyncRoutes = [
         path: 'videoData',
         name: 'videoData',
         component: VideoDataManage,
-        meta: { title: '管理员管理', icon: 'el-icon-s-data' }
+        meta: { title: '员工管理', icon: 'el-icon-s-data' }
       }
     ]
   },

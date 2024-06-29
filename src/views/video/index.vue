@@ -1,4 +1,4 @@
-<template>  
+<template>
   <div class="video">
     <el-container class="container">
       <el-main class="left">
@@ -14,7 +14,7 @@
               <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
             </div>
             <div>
-              教室人数：    
+              教室人数：
               <LongPollingComponent></LongPollingComponent>
             </div>
           </el-card>
@@ -65,9 +65,9 @@ export default {
   methods: {
     getSRC() {
       api.getURL().then(response => {
-          this.videoSource = response.src.video1;
-          this.videoSource2 = response.src.video2;
-          console.log(this.videoSource);
+        this.videoSource = response.src.video1;
+        this.videoSource2 = response.src.video2;
+        console.log(this.videoSource);
       });
     }
   },
@@ -83,12 +83,15 @@ export default {
 <style>
 .container {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 平分两列 */
-  gap: 10px; /* 列之间的间隔，根据需要调整 */
+  grid-template-columns: 1fr 1fr;
+  /* 平分两列 */
+  gap: 10px;
+  /* 列之间的间隔，根据需要调整 */
 }
 
 .left,
 .right {
-  padding: 10px; /* 内边距，根据需要调整 */
+  padding: 10px;
+  /* 内边距，根据需要调整 */
 }
 </style>
