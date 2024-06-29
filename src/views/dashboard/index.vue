@@ -1,78 +1,107 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text" style="font-size: 40px">
-      <i class="el-icon-user-solid"></i>
-      {{ name }}，欢迎您！
-    </div>
-    <el-divider content-position="left">历史人数数据</el-divider>
-    <div class="block">
-      <img :src="imgSource" />
-    </div>
+  <div id="app">
+    <el-container>
+      <el-header>
+        <h1>欢迎来到IYing养老系统</h1>
+      </el-header>
+      <el-main>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-card>
+              <h2>年龄分布</h2>
+              <canvas id="ageDistributionChart"></canvas>
+            </el-card>
+          </el-col>
+          <el-col :span="12">
+            <el-card>
+              <h2>健康状况</h2>
+              <canvas id="healthStatusChart"></canvas>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import api from '@/api/historyData'
+import { Bar, Pie } from 'chart.js';
+import 'element-ui/lib/theme-chalk/index.css';
+import { Container, Header, Main, Row, Col, Card } from 'element-ui';
 
 export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+  name: 'App',
+  components: {
+    [Container.name]: Container,
+    [Header.name]: Header,
+    [Main.name]: Main,
+    [Row.name]: Row,
+    [Col.name]: Col,
+    [Card.name]: Card,
   },
   data() {
     return {
-      imgSource: ''
-    }
+      ageDistributionData: {
+        labels: ['60-70', '70-80', '80-90', '90以上'],
+        datasets: [
+          {
+            label: '人数',
+            backgroundColor: '#42A5F5',
+            data: [55, 31, 20, 16], // 模拟数据
+          },
+        ],
+      },
+      healthStatusData: {
+        labels: ['优秀', '良好', '一般', '需要额外关注'],
+        datasets: [
+          {
+            backgroundColor: ['#66BB6A', '#FFA726', '#EF5350', '#AB47BC'],
+            data: [40, 35, 15, 10], // 模拟数据
+          },
+        ],
+      },
+    };
+  },
+  mounted() {
+    this.createAgeDistributionChart();
+    this.createHealthStatusChart();
   },
   methods: {
-    getGraph() {
-      api.getGraphURL().then(response => {
-        this.imgSource = response.src
-      })
-    }
+    createAgeDistributionChart() {
+      new Bar(document.getElementById('ageDistributionChart'), {
+        data: this.ageDistributionData,
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: '老年人年龄分布',
+          },
+        },
+      });
+    },
+    createHealthStatusChart() {
+      try {
+        new Pie(document.getElementById('healthStatusChart'), {
+          data: this.healthStatusData,
+          options: {
+            responsive: true,
+            title: {
+              display: true,
+              text: '老年人健康状况',
+            },
+          },
+        });
+        console.log("Pie chart created successfully");
+      } catch (error) {
+        console.error("Error creating Pie chart:", error);
+      }
+    },
   },
-  created() {
-    this.getGraph()
-  }
-}
+};
 </script>
 
-<style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-</style>
-
 <style>
-.dashboard-container {
-  width: 100%;
-  height: 800px;
-  background-image: url('../../assets/home1.png');
-}
-
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 300px;
-  margin: 0;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
+#app {
+  padding: 20px;
 }
 </style>

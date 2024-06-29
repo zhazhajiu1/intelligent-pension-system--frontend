@@ -45,17 +45,8 @@ service.interceptors.request.use(
 )
 
 // response interceptor
+// response interceptor
 service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
   response => {
     const res = response.data
 
@@ -83,7 +74,7 @@ service.interceptors.response.use(
       
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return res.json()
+      return res; // 这里直接返回解析后的数据
     }
   },
   error => {
@@ -96,6 +87,7 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
 
 // Function to get CSRF token
 // function getCSRFToken() {

@@ -8,6 +8,16 @@ export default {
       method: 'post',
       data: data
     })
+  },
+
+  uploadCloud(data) {
+    return request({
+      url: '/user/uploadCloud',
+      method: 'post',
+      data: data
+    })
   }
+
+
 }
 

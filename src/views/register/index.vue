@@ -19,7 +19,17 @@
           <el-form-item label="角色" prop="userrole">
             <el-col :span="5">
               <el-radio v-model="ruleForm.userrole" label="2">义工</el-radio>
-              <el-radio v-model="ruleForm.userrole" label="1">员工</el-radio> </el-col>
+              <el-radio v-model="ruleForm.userrole" label="1">员工</el-radio>
+            </el-col>
+          </el-form-item>
+
+          <el-form-item label="上传图片">
+            <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
+              :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
+              :http-request="handleUploadRequest" accept="image/*">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+            </el-upload>
           </el-form-item>
 
           <el-form-item label="手机号码" prop="phone">
@@ -27,7 +37,7 @@
               <el-input v-model="ruleForm.phone" placeholder="请输入您的手机号码" />
             </el-col>
             <el-col :span="5">
-              <div class="error">{{ error }}</div> <!-- 显示错误消息 -->
+              <div class="error">{{ error }}</div>
             </el-col>
           </el-form-item>
 
@@ -37,10 +47,17 @@
             </el-col>
           </el-form-item>
 
+          <el-form-item label="年龄" prop="userage">
+            <el-col :span="5">
+              <el-input v-model="ruleForm.userage" placeholder="请输入您的年龄" />
+            </el-col>
+          </el-form-item>
+
           <el-form-item label="性别" prop="usersex">
             <el-col :span="5">
               <el-radio v-model="ruleForm.usersex" label="f">女</el-radio>
-              <el-radio v-model="ruleForm.usersex" label="m">男</el-radio> </el-col>
+              <el-radio v-model="ruleForm.usersex" label="m">男</el-radio>
+            </el-col>
           </el-form-item>
 
           <el-form-item label="密码" prop="pwd">
@@ -61,7 +78,6 @@
             </el-col>
             <el-col :span="5">
               <div width="100%" @click="refreshCode">
-                <!--验证码组件-->
                 <s-identify :identifyCode="identifyCode" style="margin-top: 4px"></s-identify>
               </div>
             </el-col>
@@ -78,35 +94,31 @@
 </template>
 
 <script>
-// import Vue from 'vue'
 import api from '@/api/register'
-// import VueParticles from './vue-particles'
-// Vue.use(VueParticles)
 import SIdentify from './verify.vue'
 
 export default {
-  // name: 'Register',
   name: 'register',
   components: { SIdentify },
   data() {
     return {
+      videoFile: null,
+      fileList: [],
       statusMsg: '',
       error: '',
-      // isDisable: false,
-      // codeLoading: false,
       ruleForm: {
+        userage: '',
         userrole: '',
         usersex: '',
         username: '',
         phone: '',
         code: '',
         pwd: '',
-        cpwd: ''
+        cpwd: '',
+        yun_url: '',
       },
-
-      identifyCodes: '1234567890abcdefjhijklinopqrsduvwxyz',//随机串内容
+      identifyCodes: '1234567890abcdefjhijklinopqrsduvwxyz',
       identifyCode: '',
-
       rules: {
         userrole: [{
           required: true,
@@ -166,17 +178,58 @@ export default {
           },
           trigger: 'blur'
         }]
-
       }
     }
   },
   mounted() {
-    // 初始化验证码
     this.identifyCode = ''
     this.makeCode(this.identifyCodes, 4)
   },
   methods: {
-    // 重置验证码
+    handleFileChange(file, fileList) {
+      this.fileList = fileList;
+      this.videoFile = file.raw;
+    },
+    handleFileRemove(file, fileList) {
+      this.fileList = fileList;
+      if (fileList.length === 0) {
+        this.videoFile = null;
+      }
+    },
+    handleUploadRequest({ file }) {
+      this.videoFile = file;
+    },
+    submitUpload() {
+      if (!this.videoFile) {
+        alert('请选择图片文件');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', this.videoFile);
+
+      console.log('Form Data:', formData);
+
+      api.uploadCloud(formData).then(response => {
+        const res = response; // axios 返回的数据在 response 中
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '上传成功！',
+            type: 'success',
+          });
+          this.ruleForm.yun_url = res.data; // 存储图片 URL
+          console.log(this.ruleForm.yun_url);
+
+        } else {
+          this.$message.error('上传失败，请重试');
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$message.error('上传失败，请重试');
+      });
+    },
+
     refreshCode() {
       this.identifyCode = ''
       this.makeCode(this.identifyCodes, 4)
@@ -189,11 +242,7 @@ export default {
     randomNum(min, max) {
       return Math.floor(Math.random() * (max - min) + min)
     },
-
-    // 用户注册
-    register: function () {
-
-      //验证码验证
+    register() {
       if (this.ruleForm.code.toLowerCase() !== this.identifyCode.toLowerCase()) {
         this.$message.error('请填写正确验证码')
         this.refreshCode()
@@ -208,6 +257,8 @@ export default {
             Password: this.ruleForm.pwd,
             Sex: this.ruleForm.usersex,
             Phone: this.ruleForm.phone,
+            ImgUrl: this.ruleForm.yun_url,
+            Age: this.ruleForm.userage,
           }
           api.register(user).then(res => {
             this.$message({
@@ -216,7 +267,7 @@ export default {
               type: 'success'
             })
             setTimeout(() => {
-              this.$router.push('/')
+              this.$router.push('/login')
             }, 2000)
           }).catch(err => {
             console.log(err)
@@ -229,9 +280,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
@@ -242,7 +290,6 @@ $cursor: #fff;
   }
 }
 
-/* reset element-ui css */
 .register-container {
   .el-input {
     display: inline-block;
@@ -343,8 +390,4 @@ $light_gray: #eee;
     }
   }
 }
-</style>
-
-<style scoped>
-/* 修改验证器样式 */
 </style>
