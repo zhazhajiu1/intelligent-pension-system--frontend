@@ -12,7 +12,7 @@ const service = axios.create({
   //   'Content-Type':'application/x-www-form-urlencoded',
   //   'Access-Control-Allow-Origin':'*'     
   // },
-  // headers: {'Content-Type':'application/json'},
+  headers: {'Content-Type':'application/json'},
   // headers: {'Content-Type':'application/x-www-form-urlencoded'},
 
 })
@@ -26,7 +26,7 @@ service.interceptors.request.use(
       // 让每个请求携带自定义 token
       // ['X-Token'] 是自定义的请求头键名
       // 根据实际情况修改
-      config.headers['X-Token'] = getToken()
+      // config.headers['X-Token'] = getToken()
     }
 
     // 获取 CSRF token

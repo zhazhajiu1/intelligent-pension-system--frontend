@@ -5,93 +5,80 @@
         <div class="video-container">
           <div>摄像头1：</div>
           <div>
-            <img :src="videoSource" style="width: 100%;height: 100%">
+            <img :src="videoSource" style="width: 100%; height: 100%">
           </div>
           <el-divider></el-divider>
           <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>教室人数统计</span>
-              <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
-            </div>
-            <div>
-              教室人数：
-              <LongPollingComponent></LongPollingComponent>
-            </div>
+            <button @click="getSRC">获取视频源</button>
           </el-card>
         </div>
       </el-main>
-      <el-main class="right">
-        <div class="video-container">
-          <div>摄像头2：</div>
-          <div>
-            <img :src="videoSource2" style="width: 100%;height: 100%">
-          </div>
-          <el-divider></el-divider>
-        </div>
-      </el-main>
-      <!-- <el-aside width="300px">
-        <el-divider></el-divider>
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>人数统计</span>
-            <LongPollingComponent></LongPollingComponent>
-          </div>
-        </el-card>
-        <el-divider></el-divider>
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>行为分析</span>
-          </div>
-        </el-card>
-      </el-aside> -->
     </el-container>
   </div>
 </template>
 
 <script>
-import api from '@/api/video'
-import LongPollingComponent from '@/components/LongPollingComponent.vue';
+import api from '@/api/video';
+
 export default {
   data() {
     return {
-      videoSource: "",
-      videoSource2: "",
-      // videoSource: 'https://prod-streaming-video-msn-com.akamaized.net/a8c412fa-f696-4ff2-9c76-e8ed9cdffe0f/604a87fc-e7bc-463e-8d56-cde7e661d690.mp4',
-      // videoSource: 'http://vjs.zencdn.net/v/oceans.mp4',
-      // videoSource: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-      title: "监控视频"
+      videoSource: '',
+      videoSource2: '',
+      title: '监控视频'
     };
   },
-  methods: {
-    getSRC() {
-      api.getURL().then(response => {
-        this.videoSource = response.src.video1;
-        this.videoSource2 = response.src.video2;
-        console.log(this.videoSource);
-      });
-    }
-  },
-  beforeDestroy() {
-  },
-  created() {
+
+  mounted() {
     this.getSRC();
   },
-  components: { LongPollingComponent },
-}
+
+  methods: {
+    getSRC() {
+      // api.getURL().then(response => {
+      //   console.log('API response:', response);
+      //   if (response && response.src) {
+      //     this.videoSource = response.src.video1;
+      //     console.log('videoSource:', this.videoSource);
+      //   } else {
+      //     console.error('Invalid response format:', response);
+      //   }
+      // }).catch(error => {
+      //   console.error('API request failed:', error);
+      // });
+
+      api.getURL().then(response => {
+        const res = response; // axios 返回的数据在 response 中
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '获取成功！',
+            type: 'success',
+          });
+          this.videoSource = res.src.video1; // Assigning video URL to videoSource
+          console.log(this.videoSource);
+
+        } else {
+          this.$message.error('获取失败，请重试');
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$message.error('获取失败，请重试');
+      });
+    }
+  }
+};
 </script>
 
 <style>
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* 平分两列 */
   gap: 10px;
-  /* 列之间的间隔，根据需要调整 */
 }
 
 .left,
 .right {
   padding: 10px;
-  /* 内边距，根据需要调整 */
 }
 </style>

@@ -11,10 +11,11 @@ import request from '@/utils/request'
 export default {
   getURL() {
     return request({
-      url: '/video/getURL',
+      url: '/video/getUrl',
       method: 'get'
     })
   },
+
   stopVideo() {
     return request({
       url: '/video/stopVideo',
