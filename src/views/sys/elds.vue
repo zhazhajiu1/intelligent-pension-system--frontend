@@ -68,6 +68,14 @@
         <el-form-item label="密码">
           <el-input v-model="editForm.Password" required></el-input>
         </el-form-item>
+
+        <el-form-item label="健康状况">
+          <el-select v-model="editForm.Healthy" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="是否启用">
           <el-input v-model="editForm.IsActive" required></el-input>
         </el-form-item>
@@ -96,6 +104,23 @@ import api from '@/api/eld'
 export default {
   data() {
     return {
+      options: [{
+          value: '选项1',
+          label: '健康'
+        }, {
+          value: '选项2',
+          label: '良好'
+        }, {
+          value: '选项3',
+          label: '及格'
+        }, {
+          value: '选项4',
+          label: '疾病'
+        }, {
+          value: '选项5',
+          label: '严重'
+        }],
+        value: '',
       form: {
         UserName: '',
         Phone: '',
@@ -110,7 +135,7 @@ export default {
         Created: '',
         Updated: '',
         Birthday: '1960-01-01 00:00:00',
-        Healthy: '健康',
+        Healthy: '',
         GuardianName: '刘荧',
         GuardianPhone: '15263635454',
         ImgUrl: '',
@@ -196,6 +221,8 @@ export default {
     },
 
     handleSubmit() {
+      this.editForm.Healthy = this.value;
+
       api.employeeAdd(this.editForm).then(response => {
         const res = response; // axios 返回的数据在 response 中
         if (res.code === 20000) {
