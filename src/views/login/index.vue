@@ -74,8 +74,8 @@ export default {
 
       loginForm: {
         userrole: '2',  // 默认身份
-        username: 'admin',
-        password: '111111'
+        username: 'lsy',
+        password: 'lsy123'
       },
       loginRules: {
         userrole: [{ required: true, message: '请选择身份', trigger: 'change' }],

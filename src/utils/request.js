@@ -12,7 +12,7 @@ const service = axios.create({
   //   'Content-Type':'application/x-www-form-urlencoded',
   //   'Access-Control-Allow-Origin':'*'     
   // },
-  headers: {'Content-Type':'application/json'},
+  headers: { 'Content-Type': 'application/json' },
   // headers: {'Content-Type':'application/x-www-form-urlencoded'},
 
 })
@@ -20,20 +20,13 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   async config => {
-    // 在发送请求之前做些什么
-
-    if (store.getters.token) {
-      // 让每个请求携带自定义 token
-      // ['X-Token'] 是自定义的请求头键名
-      // 根据实际情况修改
-      // config.headers['X-Token'] = getToken()
+    // 从 localStorage 获取 token
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+      // config.headers['token'] = `${token}`;
     }
 
-    // 获取 CSRF token
-    // const csrfToken = await getCSRFToken();
-
-    // 设置 CSRF token 到请求头
-    // config.headers['X-CSRFToken'] = csrfToken;
 
     return config
   },
@@ -71,7 +64,7 @@ service.interceptors.response.use(
           })
         })
       }
-      
+
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return res; // 这里直接返回解析后的数据
