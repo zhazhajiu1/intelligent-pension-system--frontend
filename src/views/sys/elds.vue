@@ -22,10 +22,10 @@
     <!-- 结果列表 -->
     <el-card>
       <el-table :data="tableData" border style="width: 90%">
-        <el-table-column fixed prop="id" label="id" width="50"></el-table-column>
-        <el-table-column prop="name" label="name" width="100"></el-table-column>
-        <el-table-column prop="sex" label="sex" width="100"></el-table-column>
-        <el-table-column prop="age" label="age" width="100"></el-table-column>
+        <el-table-column fixed prop="id" label="id" width="100"></el-table-column>
+        <el-table-column prop="name" label="name" width="150"></el-table-column>
+        <el-table-column prop="sex" label="sex" width="150"></el-table-column>
+        <el-table-column prop="age" label="age" width="150"></el-table-column>
         <el-table-column prop="phone" label="phone" width="300"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
@@ -72,6 +72,15 @@
           <el-input v-model="editForm.IsActive" required></el-input>
         </el-form-item>
 
+        <el-form-item label="上传图片">
+          <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
+            :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
+            :http-request="handleUploadRequest" accept="image/*">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+          </el-upload>
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" @click="handleSubmit()">提交</el-button>
           <el-button @click="onEditCancel">取消</el-button>
@@ -100,6 +109,11 @@ export default {
         IsActive: '',
         Created: '',
         Updated: '',
+        Birthday: '1960-01-01 00:00:00',
+        Healthy: '健康',
+        GuardianName: '刘荧',
+        GuardianPhone: '15263635454',
+        ImgUrl: '',
       },
 
       editDialogVisible: false,
@@ -120,6 +134,50 @@ export default {
   },
 
   methods: {
+
+    handleFileChange(file, fileList) {
+      this.fileList = fileList;
+      this.videoFile = file.raw;
+    },
+    handleFileRemove(file, fileList) {
+      this.fileList = fileList;
+      if (fileList.length === 0) {
+        this.videoFile = null;
+      }
+    },
+    handleUploadRequest({ file }) {
+      this.videoFile = file;
+    },
+    submitUpload() {
+      if (!this.videoFile) {
+        alert('请选择图片文件');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', this.videoFile);
+
+      console.log('Form Data:', formData);
+
+      api.uploadCloud(formData).then(response => {
+        const res = response; // axios 返回的数据在 response 中
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '上传成功！',
+            type: 'success',
+          });
+          this.editForm.ImgUrl = res.data; // 存储图片 URL
+          console.log(this.editForm.ImgUrl);
+
+        } else {
+          this.$message.error('上传失败，请重试');
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$message.error('上传失败，请重试');
+      });
+    },
 
     addStaff() {
       this.editDialogVisible = true;
@@ -162,11 +220,11 @@ export default {
       api.getList(this.form).then(response => {
         const res = response; // axios 返回的数据在 response 中
         if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '获取成功！',
-            type: 'success',
-          });
+          // this.$message({
+          //   showClose: true,
+          //   message: '获取成功！',
+          //   type: 'success',
+          // });
 
           const records = res.data.rows;
           this.tableData = records.map(record => ({
@@ -225,7 +283,7 @@ export default {
     // },
 
     viewDetail(id) {
-      this.$router.push({ path: `/sys/staffDetail/${id}` });
+      this.$router.push({ path: `/sys/eldDetail/${id}` });
     }
   },
 

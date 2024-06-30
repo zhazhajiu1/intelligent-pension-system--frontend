@@ -19,7 +19,7 @@ export default {
 
   employeeUpdate(data) {
     return request({
-      url: '/user/employeeUpdate',
+      url: '/user/elderlyUpdate',
       method: 'put',
       data: data
     })
@@ -40,6 +40,14 @@ export default {
       params: data
     })
   },
+
+  uploadCloud(data) {
+    return request({
+      url: '/user/uploadCloud',
+      method: 'post',
+      data: data
+    })
+  }
 
 }
 

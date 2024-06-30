@@ -196,11 +196,11 @@ export default {
       api.employeeAdd(this.editForm).then(response => {
         const res = response; // axios 返回的数据在 response 中
         if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '添加成功！',
-            type: 'success',
-          });
+          // this.$message({
+          //   showClose: true,
+          //   message: '添加成功！',
+          //   type: 'success',
+          // });
 
           this.editDialogVisible = false;
           this.getStaff();

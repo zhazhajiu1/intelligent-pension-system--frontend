@@ -20,6 +20,7 @@ import HistoryDataPhoto from '@/views/historyData/index'
 import HistoryDataVideo from '@/views/historyData/videoIndex'
 import StaffDetail from '@/views/sys/staffDetail.vue'
 import VolunteerDetail from '@/views/sys/volunteerDetail.vue'
+import EldDetail from '@/views/sys/eldDetail.vue'
 
 
 export const constantRoutes = [
@@ -88,6 +89,13 @@ export const asyncRoutes = [
         name: 'user',
         component: UserManage,
         meta: { title: '老人管理', icon: 'user' }
+      },
+      {
+        path: 'eldDetail/:id',
+        name: 'eldDetail',
+        component: EldDetail,
+        meta: { title: '义工详情', icon: 'el-icon-s-data' },
+        hidden: true
       },
       {
         path: 'data',
