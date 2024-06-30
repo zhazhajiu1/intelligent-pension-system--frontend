@@ -9,10 +9,9 @@
             <el-input v-model="form.UserName" placeholder="请输入姓名"></el-input>
             <el-input v-model="form.Phone" placeholder="请输入电话号码"></el-input>
 
-            <el-button type="primary" round icon="el-icon-search" @click="getStaff">查询</el-button>
-            <el-button type="primary" round icon="el-icon-search" @click="getStaff">新增</el-button>
+            <el-button type="primary" round icon="el-icon-search" @click="getStaff()">查询</el-button>
+            <el-button type="primary" round icon="el-icon-search" @click="addStaff()">新增</el-button>
 
-            
           </div>
         </el-col>
         <el-col :span="4"> </el-col>
@@ -23,14 +22,15 @@
     <!-- 结果列表 -->
     <el-card>
       <el-table :data="tableData" border style="width: 90%">
-        <el-table-column fixed prop="id" label="id" width="50"></el-table-column>
-        <el-table-column prop="name" label="name" width="100"></el-table-column>
-        <el-table-column prop="sex" label="sex" width="100"></el-table-column>
-        <el-table-column prop="age" label="age" width="100"></el-table-column>
+        <el-table-column fixed prop="id" label="id" width="100"></el-table-column>
+        <el-table-column prop="name" label="name" width="150"></el-table-column>
+        <el-table-column prop="sex" label="sex" width="150"></el-table-column>
+        <el-table-column prop="age" label="age" width="150"></el-table-column>
         <el-table-column prop="phone" label="phone" width="300"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
             <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
+            <!-- <el-button @click="openEditForm(scope.row)" type="text" size="small">编辑</el-button> -->
             <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
           </template>
         </el-table-column>
@@ -50,28 +50,43 @@
     >
     </el-pagination> -->
 
-    <!-- <el-dialog :visible.sync="editDialogVisible" title="编辑视频信息">
-          <el-form ref="editForm" :model="editForm" label-width="150px">
-            <el-form-item label="新视频标题">
-              <el-input v-model="editForm.title" required></el-input>
-            </el-form-item>
+    <el-dialog :visible.sync="editDialogVisible" title="编辑信息">
+      <el-form ref="editForm" :model="editForm" label-width="150px">
+        <el-form-item label="姓名">
+          <el-input v-model="editForm.UserName" required></el-input>
+        </el-form-item>
 
-            <el-form-item label="上传新视频">
-              <el-upload class="upload-demo" ref="editUpload" action="" :auto-upload="false" :file-list="editFileList"
-                :on-change="handleEditFileChange" :on-remove="handleEditFileRemove"
-                :http-request="handleEditUploadRequest" accept="video/*">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                <el-button style="margin-left: 10px;" size="small" type="success"
-                  @click="submitEditUpload">上传到服务器</el-button>
-              </el-upload>
-            </el-form-item>
+        <el-form-item label="电话号码">
+          <el-input v-model="editForm.Phone" required></el-input>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-input v-model="editForm.Sex" required></el-input>
+        </el-form-item>
+        <el-form-item label="年龄">
+          <el-input v-model="editForm.Age" required></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="editForm.Password" required></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-input v-model="editForm.IsActive" required></el-input>
+        </el-form-item>
 
-            <el-form-item>
-              <el-button type="primary" @click="handleSubmit_update">提交修改</el-button>
-              <el-button @click="onEditCancel">取消</el-button>
-            </el-form-item>
-          </el-form>
-    </el-dialog> -->
+        <el-form-item label="上传图片">
+          <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
+            :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
+            :http-request="handleUploadRequest" accept="image/*">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+          </el-upload>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="handleSubmit()">提交</el-button>
+          <el-button @click="onEditCancel">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
 
   </div>
 </template>
@@ -85,6 +100,20 @@ export default {
         UserName: '',
         Phone: '',
       },
+
+      editForm: {
+        UserName: '',
+        Phone: '',
+        Sex: '',
+        Age: '',
+        Password: '',
+        IsActive: '',
+        Created: '',
+        Updated: '',
+        ImgUrl: '',
+      },
+
+      editDialogVisible: false,
       id: '',
       sex: '',
       age: '',
@@ -102,6 +131,87 @@ export default {
   },
 
   methods: {
+
+    handleFileChange(file, fileList) {
+      this.fileList = fileList;
+      this.videoFile = file.raw;
+    },
+    handleFileRemove(file, fileList) {
+      this.fileList = fileList;
+      if (fileList.length === 0) {
+        this.videoFile = null;
+      }
+    },
+    handleUploadRequest({ file }) {
+      this.videoFile = file;
+    },
+    submitUpload() {
+      if (!this.videoFile) {
+        alert('请选择图片文件');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', this.videoFile);
+
+      console.log('Form Data:', formData);
+
+      api.uploadCloud(formData).then(response => {
+        const res = response; // axios 返回的数据在 response 中
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '上传成功！',
+            type: 'success',
+          });
+          this.editForm.ImgUrl = res.data; // 存储图片 URL
+          console.log(this.editForm.ImgUrl);
+
+        } else {
+          this.$message.error('上传失败，请重试');
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$message.error('上传失败，请重试');
+      });
+    },
+
+    addStaff() {
+      this.editDialogVisible = true;
+    },
+
+    onEditCancel() {
+      this.editDialogVisible = false;
+      this.editForm = {
+        UserName: '',
+        Phone: '',
+        Sex: '',
+        Age: '',
+        Password: '',
+        IsActive: '',
+      };
+    },
+
+    handleSubmit() {
+      api.employeeAdd(this.editForm).then(response => {
+        const res = response; // axios 返回的数据在 response 中
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '添加成功！',
+            type: 'success',
+          });
+
+          this.editDialogVisible = false;
+          this.getStaff();
+        } else {
+          this.$message.error('添加失败，请重试');
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$message.error('添加失败，请重试');
+      });
+    },
 
     getStaff() {
       api.getList(this.form).then(response => {
@@ -165,12 +275,9 @@ export default {
 
       })
     },
-    // resetForm() {
-
-    // },
 
     viewDetail(id) {
-      this.$router.push({ path: `/sys/staffDetail/${id}` });
+      this.$router.push({ path: `/sys/volunteerDetail/${id}` });
     }
   },
 

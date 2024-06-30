@@ -6,6 +6,10 @@
                 <el-col :span="20">
                     <div class="block">
                         <h1>{{ userInfo.UserName }}的详情信息</h1>
+                        <!-- 显示图片 -->
+                        <el-card v-if="userInfo.ImgUrl">
+                            <img :src="userInfo.ImgUrl" alt="图片加载失败" style="max-width: 100%;">
+                        </el-card>
                     </div>
                 </el-col>
                 <el-col :span="4"> </el-col>
@@ -13,28 +17,10 @@
         </el-card>
 
         <el-divider></el-divider>
-        <!-- 结果列表 -->
-        <!-- <el-card>
-            <el-table :data="tableData" border style="width: 90%">
-                <el-table-column fixed prop="id" label="id" width="50"></el-table-column>
-                <el-table-column prop="name" label="name" width="100"></el-table-column>
-                <el-table-column prop="sex" label="sex" width="100"></el-table-column>
-                <el-table-column prop="age" label="age" width="100"></el-table-column>
-                <el-table-column prop="phone" label="phone" width="300"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="200">
-                    <template slot-scope="scope">
-                        <el-button @click="viewDetail(scope.row.name)" type="text" size="small">查看</el-button>
-                        <el-button @click="deleteStaff(scope.row.id)" type="text" size="small"
-                            style="color: red;">删除</el-button>
-                    </template>
-</el-table-column>
-</el-table>
-</el-card> -->
 
         <el-card>
             <el-descriptions title="用户信息" :column="3">
                 <!-- 第一行 -->
-
                 <el-row>
                     <el-descriptions-item label="用户名" :span="1">用户名: {{ userInfo.UserName }} </el-descriptions-item>
                     <el-descriptions-item label="编号" :span="1">编号: {{ userInfo.ID }} </el-descriptions-item>
@@ -58,7 +44,6 @@
                 <el-row>
                     <!-- 第四行 -->
                     <el-descriptions-item label="创建时间" :span="3">创建时间: {{ userInfo.Created }}</el-descriptions-item>
-
                 </el-row>
                 <el-row>
                     <!-- 第五行 -->
@@ -69,7 +54,7 @@
             <br>
             <hr><br>
 
-            <el-button type="primary" round icon="el-icon-search" @click="updateStaff()">修改信息</el-button>
+            <el-button type="primary" round icon="el-icon-edit" @click="updateStaff()">修改信息</el-button>
         </el-card>
 
         <el-dialog :visible.sync="editDialogVisible" title="编辑信息">
@@ -94,14 +79,25 @@
                     <el-input v-model="editForm.IsActive" required></el-input>
                 </el-form-item>
 
+
+                <el-form-item label="上传图片">
+                    <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
+                        :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
+                        :http-request="handleUploadRequest" accept="image/*">
+                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success"
+                            @click="submitUpload">上传到服务器</el-button>
+                    </el-upload>
+                </el-form-item>
+
+
+
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">提交修改</el-button>
                     <el-button @click="onEditCancel">取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
-
-
     </div>
 </template>
 
@@ -113,7 +109,6 @@ export default {
             form: {
                 ID: '',
             },
-
             editForm: {
                 ID: '',
                 UserName: '',
@@ -124,8 +119,8 @@ export default {
                 IsActive: '',
                 Created: '',
                 Updated: '',
+                ImgUrl: '',
             },
-
             userInfo: {
                 ID: '',
                 UserName: '',
@@ -136,7 +131,10 @@ export default {
                 IsActive: '',
                 Created: '',
                 Updated: '',
+                ImgUrl: '',
             },
+            fileList: [],
+            editDialogVisible: false,
             tableData: [],
             token: '',
             pageSize: 5,
@@ -145,13 +143,58 @@ export default {
         }
     },
     methods: {
+
+        handleFileChange(file, fileList) {
+            this.fileList = fileList;
+            this.videoFile = file.raw;
+        },
+        handleFileRemove(file, fileList) {
+            this.fileList = fileList;
+            if (fileList.length === 0) {
+                this.videoFile = null;
+            }
+        },
+        handleUploadRequest({ file }) {
+            this.videoFile = file;
+        },
+        submitUpload() {
+            if (!this.videoFile) {
+                alert('请选择图片文件');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', this.videoFile);
+
+            console.log('Form Data:', formData);
+
+            api.uploadCloud(formData).then(response => {
+                const res = response; // axios 返回的数据在 response 中
+                if (res.code === 20000) {
+                    this.$message({
+                        showClose: true,
+                        message: '上传成功！',
+                        type: 'success',
+                    });
+                    this.editForm.ImgUrl = res.data; // 存储图片 URL
+                    console.log(this.editForm.ImgUrl);
+
+                } else {
+                    this.$message.error('上传失败，请重试');
+                }
+            }).catch(err => {
+                console.log(err);
+                this.$message.error('上传失败，请重试');
+            });
+        },
+
         getStaff() {
             api.getOne(this.form).then(response => {
                 const res = response; // axios 返回的数据在 response 中
                 if (res.code === 20000) {
                     this.$message({
                         showClose: true,
-                        message: '获取成功1！',
+                        message: '获取成功！',
                         type: 'success',
                     });
 
@@ -166,38 +209,20 @@ export default {
                         IsActive: record.IsActive,
                         Created: record.Created,
                         Updated: record.Updated,
+                        ImgUrl: record.ImgUrl,
                     };
-
-                    // 如果还需要更新表格数据
-                    this.tableData = [{
-                        id: record.ID,
-                        name: record.UserName,
-                        sex: record.Sex,
-                        age: record.Age,
-                        phone: record.Phone,
-                    }];
-
-                    this.total = 1; // 设置总记录数为1
                 } else {
-                    this.$message.error('获取失败，请重试2');
+                    this.$message.error('获取失败，请重试');
                 }
             }).catch(err => {
                 console.log(err);
-                this.$message.error('获取失败，请重试3');
+                this.$message.error('获取失败，请重试');
             });
         },
-
         updateStaff() {
-            this.editForm.UserName = this.userInfo.UserName;
-            this.editForm.Phone = this.userInfo.Phone;
-            this.editForm.Sex = this.userInfo.Sex;
-            this.editForm.Age = this.userInfo.Age;
-            this.editForm.Password = this.userInfo.Password;
-            this.editForm.IsActive = this.userInfo.IsActive;
-
+            this.editForm = { ...this.userInfo };
             this.editDialogVisible = true;
         },
-
         onEditCancel() {
             this.editDialogVisible = false;
             this.editForm = {
@@ -209,7 +234,6 @@ export default {
                 IsActive: '',
             };
         },
-
         handleSubmit() {
             this.editForm.ID = this.userInfo.ID;
 
@@ -233,7 +257,6 @@ export default {
             });
         }
     },
-
     mounted() {
         this.token = localStorage.getItem('token') || '';
         console.log('Retrieved token:', this.token);

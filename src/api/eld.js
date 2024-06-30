@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export default {
   getList(data) {
     return request({
-      url: '/user/employeeList',
+      url: '/user/elderlyList',
       method: 'get',
       params: data
     })
@@ -11,7 +11,7 @@ export default {
 
   employeeAdd(data) {
     return request({
-      url: '/user/employeeAdd',
+      url: '/user/elderlyAdd',
       method: 'post',
       data: data
     })
@@ -27,7 +27,7 @@ export default {
 
   deleteVideoById(id) {
     return request({
-      url: `/user/employeeDelete`,
+      url: `/user/elderlyDelete`,
       method: 'delete',
       params: id
     })
@@ -35,7 +35,7 @@ export default {
 
   getOne(data) {
     return request({
-      url: '/user/employeeDetailByID',
+      url: '/user/elderlyDetailByID',
       method: 'get',
       params: data
     })

@@ -22,10 +22,10 @@
     <!-- 结果列表 -->
     <el-card>
       <el-table :data="tableData" border style="width: 90%">
-        <el-table-column fixed prop="id" label="id" width="50"></el-table-column>
-        <el-table-column prop="name" label="name" width="100"></el-table-column>
-        <el-table-column prop="sex" label="sex" width="100"></el-table-column>
-        <el-table-column prop="age" label="age" width="100"></el-table-column>
+        <el-table-column fixed prop="id" label="id" width="100"></el-table-column>
+        <el-table-column prop="name" label="name" width="150"></el-table-column>
+        <el-table-column prop="sex" label="sex" width="150"></el-table-column>
+        <el-table-column prop="age" label="age" width="150"></el-table-column>
         <el-table-column prop="phone" label="phone" width="300"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
@@ -102,7 +102,7 @@ export default {
         Updated: '',
       },
 
-      editDialogVisible:'',
+      editDialogVisible: false,
       id: '',
       sex: '',
       age: '',

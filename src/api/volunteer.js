@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 
-// 提交注册
 export default {
   getList(data) {
     return request({
@@ -41,6 +40,14 @@ export default {
       params: data
     })
   },
+
+  uploadCloud(data) {
+    return request({
+      url: '/user/uploadCloud',
+      method: 'post',
+      data: data
+    })
+  }
 
 }
 
