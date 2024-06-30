@@ -35,18 +35,6 @@ export default {
 
   methods: {
     getSRC() {
-      // api.getURL().then(response => {
-      //   console.log('API response:', response);
-      //   if (response && response.src) {
-      //     this.videoSource = response.src.video1;
-      //     console.log('videoSource:', this.videoSource);
-      //   } else {
-      //     console.error('Invalid response format:', response);
-      //   }
-      // }).catch(error => {
-      //   console.error('API request failed:', error);
-      // });
-
       api.getURL().then(response => {
         const res = response; // axios 返回的数据在 response 中
         if (res.code === 20000) {

@@ -5,53 +5,39 @@
       <el-row>
         <el-col :span="20">
           <div class="block">
-            <span class="demonstration">选择要查看的日期：</span>
-            <el-date-picker
-              v-model="searchModel.date"
-              align="right"
-              value-format="yyyy-MM-dd"
-              placeholder="选择日期"
-              :picker-options="pickerOptions">
-            </el-date-picker>
-            <el-select v-model="searchModel.action" clearable placeholder="请选择要查询的行为">
-              <el-option
-                v-for="item in actionOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-button type="primary" round icon="el-icon-search" @click="getDataList">义工查询</el-button>
-          </div>          
+
+            <el-input v-model="form.UserName" placeholder="请输入姓名"></el-input>
+            <el-input v-model="form.Phone" placeholder="请输入电话号码"></el-input>
+
+            <el-button type="primary" round icon="el-icon-search" @click="getStaff">查询</el-button>
+            <el-button type="primary" round icon="el-icon-search" @click="getStaff">新增</el-button>
+
+            
+          </div>
         </el-col>
         <el-col :span="4"> </el-col>
       </el-row>
     </el-card>
+
     <el-divider></el-divider>
     <!-- 结果列表 -->
     <el-card>
-      <el-table 
-      :data="dataList" 
-      style="width: 100%" 
-      border 
-      :cell-style="{'text-align':'center'}"
-      :header-cell-style="{'text-align':'center'}">
-        <el-table-column label="序号" width="80">
+      <el-table :data="tableData" border style="width: 90%">
+        <el-table-column fixed prop="id" label="id" width="50"></el-table-column>
+        <el-table-column prop="name" label="name" width="100"></el-table-column>
+        <el-table-column prop="sex" label="sex" width="100"></el-table-column>
+        <el-table-column prop="age" label="age" width="100"></el-table-column>
+        <el-table-column prop="phone" label="phone" width="300"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
-            {{ (searchModel.pageNo-1)* searchModel.pageSize + scope.$index +1}}
-          </template>
-        </el-table-column>        
-        <el-table-column prop="id" label="记录ID" width=""> </el-table-column>
-        <el-table-column prop="time" label="时间" width=""> </el-table-column>
-        <el-table-column prop="action" label="行为" width=""></el-table-column>
-        <el-table-column label="操作" width="">
-          <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="showPhoto(scope.row)">查看照片</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deletePhoto(scope.row.id)">删除记录</el-button>
+            <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+
     <!-- 分页组件 -->
     <!-- <el-pagination
       @size-change="handleSizeChange"
@@ -63,133 +49,142 @@
       :total="total"
     >
     </el-pagination> -->
-    <!-- 照片展示 -->
-    <el-dialog v-dialogDrag :title="title" :visible.sync="dialogFormVisible" @close="resetForm">
-      <img :src="photoSource" alt="行为抓拍" style="width: 100%;height: 100%">
-    </el-dialog>
+
+    <!-- <el-dialog :visible.sync="editDialogVisible" title="编辑视频信息">
+          <el-form ref="editForm" :model="editForm" label-width="150px">
+            <el-form-item label="新视频标题">
+              <el-input v-model="editForm.title" required></el-input>
+            </el-form-item>
+
+            <el-form-item label="上传新视频">
+              <el-upload class="upload-demo" ref="editUpload" action="" :auto-upload="false" :file-list="editFileList"
+                :on-change="handleEditFileChange" :on-remove="handleEditFileRemove"
+                :http-request="handleEditUploadRequest" accept="video/*">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-button style="margin-left: 10px;" size="small" type="success"
+                  @click="submitEditUpload">上传到服务器</el-button>
+              </el-upload>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="handleSubmit_update">提交修改</el-button>
+              <el-button @click="onEditCancel">取消</el-button>
+            </el-form-item>
+          </el-form>
+    </el-dialog> -->
+
   </div>
 </template>
 
 <script>
-import api from '@/api/historyData'
+import api from '@/api/volunteer'
 export default {
   data() {
     return {
-      actionOptions: [{
-        value: '1',
-        label: '人数变化'
-      }, {
-        value: '2',
-        label: '使用手机'
-      }, {
-        value: '3',
-        label: '抽烟'
-      }, {
-        value: '4',
-        label: '喝水'
-      }],
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            picker.$emit('pick', new Date());
-          }
-        }, {
-          text: '昨天',
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24);
-            picker.$emit('pick', date);
-          }
-        }, {
-          text: '一周前',
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', date);
-          }
-        }]
+      form: {
+        UserName: '',
+        Phone: '',
       },
-      // searchDate: '',
-      formLabelWidth: '130px',
-      dialogFormVisible: false,
-      title: '',
+      id: '',
+      sex: '',
+      age: '',
+      token: '',
+      tableData: [],
+      pageSize: 5,
+      currentPage: 1,
       total: 0,
-      searchModel: {
-        pageNo: 1,
-        pageSize: 10
+
+      videoSource: '',
+      id_delete: {
+        ID: '',
       },
-      dataList: [],
-      photoSource: ''
     }
   },
+
   methods: {
-    deletePhoto(id) {
+
+    getStaff() {
+      api.getList(this.form).then(response => {
+        const res = response; // axios 返回的数据在 response 中
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '获取成功！',
+            type: 'success',
+          });
+
+          const records = res.data.rows;
+          this.tableData = records.map(record => ({
+            id: record.ID,
+            name: record.UserName,
+            sex: record.Sex,
+            age: record.Age,
+            phone: record.Phone,
+          }));
+
+          this.total = res.data.total; // 更新总记录数
+
+        } else {
+          this.$message.error('获取失败，请重试');
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$message.error('获取失败，请重试');
+      });
+
+    },
+
+    deleteStaff(id) {
+
+      this.id_delete.ID = id;
+
       this.$confirm(`您确定删除第${id}号记录吗?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        api.deleteDataById(id).then(response => {
-          this.$message({
-            type: 'success',
-            message: response.message
-          })
-          this.getDataList()
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      }) 
-    },
-    resetForm() {
-      
-    },
-    showPhoto(data) {
-      this.title = data.action + ' 详情'
-      api.getDataURL(data.id).then(response => {
-        this.photoSource = response.src
-      })
-      this.dialogFormVisible = true
-    },
-    handleSizeChange(pageSize) {
-      this.searchModel.pageSize = pageSize
-      this.getUserList()
-    },
-    handleCurrentChange(pageNo) {
-      this.searchModel.pageNo = pageNo
-      this.getUserList()
-    },
-    getDataList() {
-      api.getDataList(this.searchModel).then(response => {
-        let templist = response.data.rows
-        templist.forEach((item) => {
-          if(item.action==="1") {
-            item.action = '人数变化'
+
+        api.deleteVideoById(this.id_delete).then(response => {
+          const res = response; // axios 返回的数据在 response 中
+          if (res.code === 20000) {
+            this.$message({
+              showClose: true,
+              message: '删除成功！',
+              type: 'success',
+            });
+
+            this.getStaff(null);
+
+          } else {
+            this.$message.error('删除失败，请重试');
           }
-          else if(item.action==='2') {
-            item.action = '使用手机'
-          }
-          else if(item.action==='3') {
-            item.action = '抽烟'
-          }
-          else {
-            item.action = '喝水'
-          }
+        }).catch(err => {
+          console.log(err);
+          this.$message.error('删除失败，请重试');
         });
-        this.dataList = templist
-        this.total = response.data.total
+
       })
+    },
+    // resetForm() {
+
+    // },
+
+    viewDetail(id) {
+      this.$router.push({ path: `/sys/staffDetail/${id}` });
     }
   },
-  created() {
-    this.getDataList()
-  }
+
+  mounted() {
+    this.token = localStorage.getItem('token') || '';
+    console.log('Retrieved token:', this.token);
+
+    if (!this.token) {
+      console.error('TOKEN is not found in localStorage');
+    } else {
+      this.getStaff(null);
+    }
+  },
+
 }
 </script>
 
@@ -198,6 +193,7 @@ export default {
   width: 200px;
   margin-right: 10px;
 }
+
 .el-dialog .el-input {
   width: 60%;
 }

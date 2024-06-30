@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export default {
   getList(data) {
     return request({
-      url: '/user/employeeList',
+      url: '/user/volunteerList',
       method: 'get',
       params: data
     })
@@ -12,7 +12,7 @@ export default {
 
   employeeAdd(data) {
     return request({
-      url: '/user/employeeAdd',
+      url: '/user/volunteerAdd',
       method: 'post',
       data: data
     })
@@ -20,7 +20,7 @@ export default {
 
   employeeUpdate(data) {
     return request({
-      url: '/user/employeeUpdate',
+      url: '/user/volunteerUpdate',
       method: 'put',
       data: data
     })
@@ -28,7 +28,7 @@ export default {
 
   deleteVideoById(id) {
     return request({
-      url: `/user/employeeDelete`,
+      url: `/user/volunteerDelete`,
       method: 'delete',
       params: id
     })
@@ -36,7 +36,7 @@ export default {
 
   getOne(data) {
     return request({
-      url: '/user/employeeDetailByID',
+      url: '/user/volunteerDetailByID',
       method: 'get',
       params: data
     })

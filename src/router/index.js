@@ -18,6 +18,9 @@ import DataManage from '@/views/sys/volunteers'
 import VideoDataManage from '@/views/sys/staff.vue'
 import HistoryDataPhoto from '@/views/historyData/index'
 import HistoryDataVideo from '@/views/historyData/videoIndex'
+import StaffDetail from '@/views/sys/staffDetail.vue'
+import VolunteerDetail from '@/views/sys/volunteerDetail.vue'
+
 
 export const constantRoutes = [
   {
@@ -93,10 +96,24 @@ export const asyncRoutes = [
         meta: { title: '义工管理', icon: 'el-icon-s-data' }
       },
       {
+        path: 'volunteerDetail/:id',
+        name: 'volunteerDetail',
+        component: VolunteerDetail,
+        meta: { title: '义工详情', icon: 'el-icon-s-data' },
+        hidden: true
+      },
+      {
         path: 'videoData',
         name: 'videoData',
         component: VideoDataManage,
         meta: { title: '员工管理', icon: 'el-icon-s-data' }
+      },
+      {
+        path: 'staffDetail/:id',
+        name: 'staffDetail',
+        component: StaffDetail,
+        meta: { title: '员工详情', icon: 'el-icon-s-data' },
+        hidden: true
       }
     ]
   },
