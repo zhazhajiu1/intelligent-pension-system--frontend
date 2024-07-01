@@ -17,7 +17,7 @@
         <el-card>
             <el-descriptions class="margin-top" title="用户信息" :column="3" :size="size" border>
                 <template slot="extra">
-                    <el-button type="primary" size="small">操作</el-button>
+                    <el-button type="primary" size="small" @click="updateStaff()">操作</el-button>
                 </template>
                 <el-descriptions-item>
                     <template slot="label">
