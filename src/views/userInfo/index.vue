@@ -21,7 +21,7 @@
         <el-card>
             <el-descriptions class="margin-top" title="用户信息" :column="3" :size="size" border>
                 <template slot="extra">
-                    <el-button type="primary" size="small">操作</el-button>
+                    <el-button type="primary" size="small" @click="updateStaff()">操作</el-button>
                 </template>
                 <el-descriptions-item>
                     <template slot="label">
@@ -42,7 +42,7 @@
                         <i class="el-icon-success"></i>
                         状态
                     </template>
-                    <el-tag type="success">{{ userInfo.IsActive === 0 ? '已启用' : '未启用' }}</el-tag>
+                    <el-tag type="success">{{ userInfo.IsActive === '0' ? '已启用' : '未启用' }}</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">
@@ -90,7 +90,6 @@
             <br>
             <hr><br>
 
-            <el-button type="primary" round icon="el-icon-edit" @click="updateStaff()">修改信息</el-button>
         </el-card>
 
 
@@ -233,11 +232,11 @@ export default {
             api.getInfo().then(response => {
                 const res = response; // axios 返回的数据在 response 中
                 if (res.code === 20000) {
-                    this.$message({
-                        showClose: true,
-                        message: '获取成功！',
-                        type: 'success',
-                    });
+                    // this.$message({
+                    //     showClose: true,
+                    //     message: '获取成功！',
+                    //     type: 'success',
+                    // });
 
                     const record = res.data; // 更新为直接获取 res.data
                     this.userInfo = {

@@ -38,7 +38,7 @@
                         <i class="el-icon-success"></i>
                         状态
                     </template>
-                    <el-tag type="success">{{ userInfo.IsActive === 0 ? '已启用' : '未启用' }}</el-tag>
+                    <el-tag type="success">{{ userInfo.IsActive === '0' ? '已启用' : '未启用' }}</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">
@@ -176,11 +176,11 @@ export default {
             api.getOne(this.form).then(response => {
                 const res = response; // axios 返回的数据在 response 中
                 if (res.code === 20000) {
-                    this.$message({
-                        showClose: true,
-                        message: '获取成功1！',
-                        type: 'success',
-                    });
+                    // this.$message({
+                    //     showClose: true,
+                    //     message: '获取成功1！',
+                    //     type: 'success',
+                    // });
 
                     const record = res.data; // 更新为直接获取 res.data
                     this.userInfo = {
