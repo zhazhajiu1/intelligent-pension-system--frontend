@@ -94,7 +94,7 @@ export const asyncRoutes = [
         path: 'eldDetail/:id',
         name: 'eldDetail',
         component: EldDetail,
-        meta: { title: '义工详情', icon: 'el-icon-s-data' },
+        meta: { title: '老人详情', icon: 'el-icon-s-data' },
         hidden: true
       },
       {
