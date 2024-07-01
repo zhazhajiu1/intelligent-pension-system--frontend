@@ -5,59 +5,36 @@
       <el-row>
         <el-col :span="20">
           <div class="block">
-            <span class="demonstration">选择要查看的日期：</span>
-            <el-date-picker
-              v-model="searchModel.date"
-              align="right"
-              value-format="yyyy-MM-dd"
-              placeholder="选择日期"
-              :picker-options="pickerOptions">
-            </el-date-picker>
-            <el-select v-model="searchModel.action" clearable placeholder="请选择要查询的行为">
-              <el-option
-                v-for="item in actionOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-button @click="getDataList" type="primary" round icon="el-icon-search">查询</el-button>
-          </div>          
+
+            <el-input v-model="form.UserName" placeholder="请输入老人姓名"></el-input>
+            <el-input v-model="form.Date" placeholder="请输入日期"></el-input>
+
+            <el-button type="primary" round icon="el-icon-search" @click="getStaff()">查询</el-button>
+          </div>
         </el-col>
         <el-col :span="4"> </el-col>
       </el-row>
     </el-card>
+
     <el-divider></el-divider>
     <!-- 结果列表 -->
     <el-card>
-      <el-table 
-      :data="dataList" 
-      style="width: 100%" 
-      border 
-      :cell-style="{'text-align':'center'}"
-      :header-cell-style="{'text-align':'center'}">
-        <el-table-column label="序号" width="80">
+      <el-table :data="tableData" border style="width: 95%">
+        <el-table-column fixed prop="id" label="序号" width="150"></el-table-column>
+        <!-- <el-table-column prop="ElderlyID" label="老人序号" width="200"></el-table-column> -->
+        <el-table-column prop="ElderlyName" label="老人姓名" width="200" :formatter="formatSex"></el-table-column>
+        <el-table-column prop="ImgUrl" label="图片" width="500"></el-table-column>
+        <el-table-column prop="Created" label="抓拍时间" width="350"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
-            {{ (searchModel.pageNo-1)* searchModel.pageSize + scope.$index +1}}
-          </template>
-        </el-table-column>        
-        <el-table-column prop="id" label="记录ID" width=""> </el-table-column>
-        <el-table-column prop="time" label="时间" width=""> </el-table-column>
-        <el-table-column prop="action" label="行为" width=""></el-table-column>
-        <!-- <el-table-column prop="photo" label="抓拍照片">
-          <template slot-scope="scope">
-            <el-tag 
-            :type="scope.row.role === '管理员' ? 'success' : 'info'"
-            disable-transitions>{{scope.row.role}}</el-tag>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="操作" width="">
-          <template slot-scope="scope">
-            <el-button type="primary" @click="showPhoto(scope.row)" icon="el-icon-picture-outline" size="mini">查看照片</el-button>
+            <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+
     <!-- 分页组件 -->
     <!-- <el-pagination
       @size-change="handleSizeChange"
@@ -70,10 +47,6 @@
     >
     </el-pagination> -->
 
-    <!-- 照片展示 -->
-    <el-dialog v-dialogDrag @close="resetForm" :title="title" :visible.sync="dialogFormVisible">
-      <img :src="photoSource" alt="行为抓拍" style="width: 100%;height: 100%">
-    </el-dialog>
   </div>
 </template>
 
@@ -82,104 +55,116 @@ import api from '@/api/historyData'
 export default {
   data() {
     return {
-      actionOptions: [{
-        value: '1',
-        label: '人数变化'
-      }, {
-        value: '2',
-        label: '使用手机'
-      }, {
-        value: '3',
-        label: '抽烟'
-      }, {
-        value: '4',
-        label: '喝水'
-      }],
-      dialogFormVisible: false,
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            picker.$emit('pick', new Date());
-          }
-        }, {
-          text: '昨天',
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24);
-            picker.$emit('pick', date);
-          }
-        }, {
-          text: '一周前',
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', date);
-          }
-        }]
+      
+      form: {
+        UserName: '',
+        Date: '',
       },
-      // searchDate: '',
-      formLabelWidth: '130px',      
-      title: '',
+      editForm: {
+        UserName: '',
+        Phone: '',
+        Sex: '',
+        Age: '',
+        Password: '',
+      },
+
+      id: '',
+      sex: '',
+      age: '',
+      token: '',
+      tableData: [],
+      pageSize: 5,
+      currentPage: 1,
       total: 0,
-      searchModel: {
-        pageNo: 1,
-        pageSize: 10
+
+      videoSource: '',
+      id_delete: {
+        ID: '',
       },
-      dataList: [],
-      photoSource: ''
     }
   },
+
   methods: {
-    resetForm() {
-      // this.userForm = {}
-      // this.$refs.userFormRef.clearValidate()
-      // this.$refs.userFormRef.resetFields()
+
+    getStaff() {
+      api.getList(this.form).then(response => {
+        const res = response; // axios 返回的数据在 response 中
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '获取成功！',
+            type: 'success',
+          });
+
+          const records = res.data.rows;
+          this.tableData = records.map(record => ({
+            id: record.ID,
+            ElderlyID: record.ElderlyID,
+            ElderlyName: record.ElderlyName,
+            ImgUrl: record.ImgUrl,
+            Created: record.Created,
+          }));
+
+          this.total = res.data.total; // 更新总记录数
+
+        } else {
+          this.$message.error('获取失败，请重试');
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$message.error('获取失败，请重试');
+      });
+
     },
-    showPhoto(data) {
-      this.title = data.action + ' 详情'
-      api.getDataURL(data.id).then(response => {
-        this.photoSource = response.src
-      })
-      this.dialogFormVisible = true
-    },
-    handleSizeChange(pageSize) {
-      this.searchModel.pageSize = pageSize
-      this.getUserList()
-    },
-    handleCurrentChange(pageNo) {
-      this.searchModel.pageNo = pageNo
-      this.getUserList()
-    },
-    getDataList() {
-      api.getDataList(this.searchModel).then(response => {
-        // this.dataList = response.data.rows
-        let templist = response.data.rows
-        templist.forEach((item) => {
-          if(item.action==="1") {
-            item.action = '人数变化'
+
+    deleteStaff(id) {
+
+      this.id_delete.ID = id;
+
+      this.$confirm(`您确定删除第${id}号记录吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+
+        api.deleteVideoById(this.id_delete).then(response => {
+          const res = response; // axios 返回的数据在 response 中
+          if (res.code === 20000) {
+            this.$message({
+              showClose: true,
+              message: '删除成功！',
+              type: 'success',
+            });
+
+            this.getStaff(null);
+
+          } else {
+            this.$message.error('删除失败，请重试');
           }
-          else if(item.action==='2') {
-            item.action = '使用手机'
-          }
-          else if(item.action==='3') {
-            item.action = '抽烟'
-          }
-          else {
-            item.action = '喝水'
-          }
+        }).catch(err => {
+          console.log(err);
+          this.$message.error('删除失败，请重试');
         });
-        this.dataList = templist
-        this.total = response.data.total
+
       })
+    },
+
+    viewDetail(id) {
+      this.$router.push({ path: `/historyData/emotionDetail/${id}` });
     }
   },
-  created() {
-    this.getDataList()
-  }
+
+  mounted() {
+    this.token = localStorage.getItem('token') || '';
+    console.log('Retrieved token:', this.token);
+
+    if (!this.token) {
+      console.error('TOKEN is not found in localStorage');
+    } else {
+      this.getStaff(null);
+    }
+  },
+
 }
 </script>
 
@@ -188,6 +173,7 @@ export default {
   width: 200px;
   margin-right: 10px;
 }
+
 .el-dialog .el-input {
   width: 60%;
 }

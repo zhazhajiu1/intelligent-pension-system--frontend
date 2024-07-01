@@ -21,12 +21,12 @@
     <el-divider></el-divider>
     <!-- 结果列表 -->
     <el-card>
-      <el-table :data="tableData" border style="width: 90%">
-        <el-table-column fixed prop="id" label="id" width="100"></el-table-column>
-        <el-table-column prop="name" label="name" width="150"></el-table-column>
-        <el-table-column prop="sex" label="sex" width="150" :formatter="formatSex"></el-table-column>
-        <el-table-column prop="age" label="age" width="150"></el-table-column>
-        <el-table-column prop="phone" label="phone" width="300"></el-table-column>
+      <el-table :data="tableData" border style="width: 95%">
+        <el-table-column fixed prop="id" label="序号" width="150"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="200"></el-table-column>
+        <el-table-column prop="sex" label="性别" width="200" :formatter="formatSex"></el-table-column>
+        <el-table-column prop="age" label="年龄" width="200"></el-table-column>
+        <el-table-column prop="phone" label="手机号码" width="350"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
             <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>

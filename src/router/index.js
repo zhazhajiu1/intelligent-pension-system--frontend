@@ -21,6 +21,8 @@ import HistoryDataVideo from '@/views/historyData/videoIndex'
 import StaffDetail from '@/views/sys/staffDetail.vue'
 import VolunteerDetail from '@/views/sys/volunteerDetail.vue'
 import EldDetail from '@/views/sys/eldDetail.vue'
+import UnknowIndex from '@/views/historyData/unknowIndex.vue'
+import EmotionDetail from '@/views/historyData/emotionDetail.vue'
 
 
 export const constantRoutes = [
@@ -136,13 +138,26 @@ export const asyncRoutes = [
         path: 'index',
         name: 'historyData',
         component: HistoryDataPhoto,
-        meta: { title: '照片数据', icon: 'el-icon-s-data' }
+        meta: { title: '情绪记录', icon: 'el-icon-s-data' }
+      },
+      {
+        path: 'emotionDetail/:id',
+        name: 'emotionDetail',
+        component: EmotionDetail,
+        meta: { title: '情绪记录详情', icon: 'el-icon-s-data' },
+        hidden: true
       },
       {
         path: 'videoIndex',
         name: 'historyData',
         component: HistoryDataVideo,
-        meta: { title: '视频数据', icon: 'el-icon-s-data' }
+        meta: { title: '摔倒记录', icon: 'el-icon-s-data' }
+      },
+      {
+        path: 'unknowIndex',
+        name: 'historyData',
+        component: UnknowIndex,
+        meta: { title: '陌生人检测', icon: 'el-icon-s-data' }
       }
     ]
   },

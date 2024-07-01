@@ -1,64 +1,45 @@
 import request from '@/utils/request'
 
 export default {
-  getDataList(searchModel) {
-    // console.log(searchModel)
+  getList(data) {
     return request({
-      url: '/video/list',
+      url: '/video/emotionList',
       method: 'get',
-      params: {
-        pageNo: searchModel.pageNo,
-        pageSize: searchModel.pageSize,
-        date: searchModel.date,
-        action: searchModel.action
-      }
+      params: data
     })
   },
-  deleteDataById(id) {
-    return request({
-      url: `/video/delete`,
-      method: 'get',
-      params: { id: id }
-    })
-  },
-  getDataURL(id) {
-    return request({
-      url: `/video/photoURL`,
-      method: 'get',
-      params: { id: id }
-    })
-  },
-  getVideoList(searchModel) {
-    // console.log(searchModel)
-    return request({
-      url: '/video/videoList',
-      method: 'get',
-      params: {
-        pageNo: searchModel.pageNo,
-        pageSize: searchModel.pageSize,
-        date: searchModel.date,
-        action: searchModel.action
-      }
-    })
-  },
+
   deleteVideoById(id) {
     return request({
-      url: `/video/deleteVideo`,
-      method: 'get',
-      params: { id: id }
+      url: `/video/emotionDelete`,
+      method: 'delete',
+      params: id
     })
   },
-  getVideoURL(id) {
+
+  getOne(data) {
     return request({
-      url: `/video/videoURL`,
+      url: '/video/emotionDetailByID',
       method: 'get',
-      params: { id: id }
+      params: data
     })
   },
-  getGraphURL() {
+
+  getFall(data) {
     return request({
-      url: `/video/dashboard`,
-      method: 'get'
+      url: '/video/fallList',
+      method: 'get',
+      params: data
     })
-  }
+  },
+
+  getUnknow(data) {
+    return request({
+      url: '/video/unknowList',
+      method: 'get',
+      params: data
+    })
+  },
+
 }
+
