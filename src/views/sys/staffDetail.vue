@@ -13,63 +13,78 @@
         </el-card>
 
         <el-divider></el-divider>
-        <!-- 结果列表 -->
-        <!-- <el-card>
-            <el-table :data="tableData" border style="width: 90%">
-                <el-table-column fixed prop="id" label="id" width="50"></el-table-column>
-                <el-table-column prop="name" label="name" width="100"></el-table-column>
-                <el-table-column prop="sex" label="sex" width="100"></el-table-column>
-                <el-table-column prop="age" label="age" width="100"></el-table-column>
-                <el-table-column prop="phone" label="phone" width="300"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="200">
-                    <template slot-scope="scope">
-                        <el-button @click="viewDetail(scope.row.name)" type="text" size="small">查看</el-button>
-                        <el-button @click="deleteStaff(scope.row.id)" type="text" size="small"
-                            style="color: red;">删除</el-button>
-                    </template>
-</el-table-column>
-</el-table>
-</el-card> -->
 
         <el-card>
-            <el-descriptions title="用户信息" :column="3">
-                <!-- 第一行 -->
-
-                <el-row>
-                    <el-descriptions-item label="用户名" :span="1">用户名: {{ userInfo.UserName }} </el-descriptions-item>
-                    <el-descriptions-item label="编号" :span="1">编号: {{ userInfo.ID }} </el-descriptions-item>
-                    <el-descriptions-item label="状态" :span="1">
-                        <el-tag type="success">{{ userInfo.IsActive }}</el-tag>
-                    </el-descriptions-item>
-                </el-row>
-
-                <el-row>
-                    <!-- 第二行 -->
-                    <el-descriptions-item label="年龄" :span="1">年龄: {{ userInfo.Age }} </el-descriptions-item>
-                    <el-descriptions-item label="性别" :span="2">性别: {{ userInfo.Sex }}</el-descriptions-item>
-                </el-row>
-
-                <el-row>
-                    <!-- 第三行 -->
-                    <el-descriptions-item label="手机号" :span="1">手机号: {{ userInfo.Phone }} </el-descriptions-item>
-                    <el-descriptions-item label="密码" :span="2">密码: {{ userInfo.Password }}</el-descriptions-item>
-                </el-row>
-
-                <el-row>
-                    <!-- 第四行 -->
-                    <el-descriptions-item label="创建时间" :span="3">创建时间: {{ userInfo.Created }}</el-descriptions-item>
-
-                </el-row>
-                <el-row>
-                    <!-- 第五行 -->
-                    <el-descriptions-item label="更新时间" :span="3">更新时间: {{ userInfo.Updated }}</el-descriptions-item>
-                </el-row>
+            <el-descriptions class="margin-top" title="用户信息" :column="3" :size="size" border>
+                <template slot="extra">
+                    <el-button type="primary" size="small">操作</el-button>
+                </template>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        用户名
+                    </template>
+                    {{ userInfo.UserName || '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-tickets"></i>
+                        编号
+                    </template>
+                    {{ userInfo.ID || '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-success"></i>
+                        状态
+                    </template>
+                    <el-tag type="success">{{ userInfo.IsActive === 0 ? '已启用' : '未启用' }}</el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-date"></i>
+                        年龄
+                    </template>
+                    {{ userInfo.Age || '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        性别
+                    </template>
+                    {{ userInfo.Sex === 'f' ? '女' : userInfo.Sex === 'm' ? '男' : '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-mobile-phone"></i>
+                        手机号
+                    </template>
+                    {{ userInfo.Phone || '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-lock"></i>
+                        密码
+                    </template>
+                    {{ userInfo.Password || '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-date"></i>
+                        创建时间
+                    </template>
+                    {{ formatDate(userInfo.Created) || '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-refresh"></i>
+                        更新时间
+                    </template>
+                    {{ formatDate(userInfo.Updated) || '待填写' }}
+                </el-descriptions-item>
             </el-descriptions>
 
-            <br>
-            <hr><br>
-
-            <el-button type="primary" round icon="el-icon-search" @click="updateStaff()">修改信息</el-button>
+            <br><br>   
         </el-card>
 
         <el-dialog :visible.sync="editDialogVisible" title="编辑信息">
@@ -145,6 +160,18 @@ export default {
         }
     },
     methods: {
+        formatDate(date) {
+            if (!date) return '';
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const seconds = String(d.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        },
+
         getStaff() {
             api.getOne(this.form).then(response => {
                 const res = response; // axios 返回的数据在 response 中
