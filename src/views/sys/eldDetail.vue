@@ -128,22 +128,19 @@
 
                 <el-form-item label="性别">
                     <el-select v-model="editForm.Sex" placeholder="请选择">
-                        <el-option v-for="item in sexOptions" :key="item.value" :label="item.label"
-                            :value="item.value">
+                        <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
-
-                <!-- <el-form-item label="性别">
-                    <el-input v-model="editForm.Sex" required></el-input>
-                </el-form-item> -->
 
                 <el-form-item label="年龄">
                     <el-input v-model="editForm.Age" required></el-input>
                 </el-form-item>
 
                 <el-form-item label="生日">
-                    <el-input v-model="editForm.Birthday" required></el-input>
+                    <el-date-picker v-model="editForm.Birthday" type="date" placeholder="选择日期" format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd" required>
+                    </el-date-picker>
                 </el-form-item>
 
                 <el-form-item label="健康状态">
@@ -160,10 +157,6 @@
                 <el-form-item label="监护人电话">
                     <el-input v-model="editForm.GuardianPhone" required></el-input>
                 </el-form-item>
-
-                <!-- <el-form-item label="是否启用">
-                    <el-input v-model="editForm.IsActive" required></el-input>
-                </el-form-item> -->
 
                 <el-form-item label="上传图片">
                     <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
@@ -219,7 +212,7 @@ export default {
                 ID: '',
             },
             editForm: {
-                Url:'',
+                Url: '',
                 UserName: '',
                 Phone: '',
                 Sex: '',
@@ -228,10 +221,10 @@ export default {
                 IsActive: '',
                 Created: '',
                 Updated: '',
-                Birthday: '1960-01-01 00:00:00',
-                Healthy: '健康',
-                GuardianName: '刘荧',
-                GuardianPhone: '15263635454',
+                Birthday: '',
+                Healthy: '',
+                GuardianName: '',
+                GuardianPhone: '',
                 ImgUrl: '',
             },
 
@@ -341,6 +334,7 @@ export default {
                         Created: record.Created,
                         Updated: record.Updated,
                         Url: record.Url,
+                        ImgUrl: record.ImgUrl,
                         Birthday: record.Birthday,
                         Healthy: record.Healthy,
                         GuardianName: record.GuardianName,

@@ -60,7 +60,10 @@
           <el-input v-model="editForm.Phone" required></el-input>
         </el-form-item>
         <el-form-item label="性别">
-          <el-input v-model="editForm.Sex" required></el-input>
+          <el-select v-model="editForm.Sex" placeholder="请选择">
+            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="年龄">
           <el-input v-model="editForm.Age" required></el-input>
@@ -68,9 +71,11 @@
         <el-form-item label="密码">
           <el-input v-model="editForm.Password" required></el-input>
         </el-form-item>
-        <el-form-item label="是否启用">
-          <el-input v-model="editForm.IsActive" required></el-input>
-        </el-form-item>
+        <!-- <el-form-item label="是否启用">
+          <el-switch v-model="editForm.IsActive" active-value="0" inactive-value="1" active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item> -->
 
         <el-form-item label="上传图片">
           <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
@@ -96,6 +101,14 @@ import api from '@/api/volunteer'
 export default {
   data() {
     return {
+      sexOptions: [{
+        value: 'f',
+        label: '女'
+      }, {
+        value: 'm',
+        label: '男'
+      }],
+
       form: {
         UserName: '',
         Phone: '',

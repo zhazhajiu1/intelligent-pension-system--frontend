@@ -58,25 +58,36 @@
         <el-form-item label="电话号码">
           <el-input v-model="editForm.Phone" required></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-input v-model="editForm.Sex" required></el-input>
-        </el-form-item>
-        <el-form-item label="年龄">
-          <el-input v-model="editForm.Age" required></el-input>
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="editForm.Password" required></el-input>
-        </el-form-item>
 
-        <el-form-item label="健康状况">
-          <el-select v-model="editForm.Healthy" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-form-item label="性别">
+          <el-select v-model="editForm.Sex" placeholder="请选择">
+            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="是否启用">
-          <el-input v-model="editForm.IsActive" required></el-input>
+        <el-form-item label="年龄">
+          <el-input v-model="editForm.Age" required></el-input>
+        </el-form-item>
+
+        <el-form-item label="生日">
+          <el-date-picker v-model="editForm.Birthday" type="date" placeholder="选择日期" format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd" required>
+          </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="健康状态">
+          <el-select v-model="editForm.Healthy" placeholder="请选择">
+            <el-option v-for="item in healthOptions" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="监护人">
+          <el-input v-model="editForm.GuardianName" required></el-input>
+        </el-form-item>
+        <el-form-item label="监护人电话">
+          <el-input v-model="editForm.GuardianPhone" required></el-input>
         </el-form-item>
 
         <el-form-item label="上传图片">
@@ -103,23 +114,31 @@ import api from '@/api/eld'
 export default {
   data() {
     return {
-      options: [{
-          value: '选项1',
-          label: '健康'
-        }, {
-          value: '选项2',
-          label: '良好'
-        }, {
-          value: '选项3',
-          label: '及格'
-        }, {
-          value: '选项4',
-          label: '疾病'
-        }, {
-          value: '选项5',
-          label: '严重'
-        }],
-        value: '',
+      healthOptions: [{
+        value: '健康',
+        label: '健康'
+      }, {
+        value: '良好',
+        label: '良好'
+      }, {
+        value: '及格',
+        label: '及格'
+      }, {
+        value: '疾病',
+        label: '疾病'
+      }, {
+        value: '严重',
+        label: '严重'
+      }],
+
+      sexOptions: [{
+        value: 'f',
+        label: '女'
+      }, {
+        value: 'm',
+        label: '男'
+      }],
+
       form: {
         UserName: '',
         Phone: '',
@@ -129,14 +148,10 @@ export default {
         Phone: '',
         Sex: '',
         Age: '',
-        Password: '',
-        IsActive: '',
-        Created: '',
-        Updated: '',
         Birthday: '1960-01-01 00:00:00',
         Healthy: '',
-        GuardianName: '刘荧',
-        GuardianPhone: '15263635454',
+        GuardianName: '',
+        GuardianPhone: '',
         ImgUrl: '',
       },
 
@@ -175,6 +190,7 @@ export default {
     handleUploadRequest({ file }) {
       this.videoFile = file;
     },
+
     submitUpload() {
       if (!this.videoFile) {
         alert('请选择图片文件');
@@ -219,11 +235,18 @@ export default {
         Age: '',
         Password: '',
         IsActive: '',
+        Created: '',
+        Updated: '',
+        Birthday: '',
+        Healthy: '',
+        GuardianName: '',
+        GuardianPhone: '',
+        ImgUrl: '',
       };
     },
 
     handleSubmit() {
-      this.editForm.Healthy = this.value;
+      // this.editForm.Healthy = this.value;
 
       api.employeeAdd(this.editForm).then(response => {
         const res = response; // axios 返回的数据在 response 中

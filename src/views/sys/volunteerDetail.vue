@@ -120,7 +120,6 @@
                     </el-switch> 
                 </el-form-item>
 
-
                 <el-form-item label="上传图片">
                     <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
                         :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
@@ -130,8 +129,6 @@
                             @click="submitUpload">上传到服务器</el-button>
                     </el-upload>
                 </el-form-item>
-
-
 
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">提交修改</el-button>
@@ -272,6 +269,7 @@ export default {
                         Created: record.Created,
                         Updated: record.Updated,
                         ImgUrl: record.ImgUrl,
+                        Url: record.Url,
                     };
                 } else {
                     this.$message.error('获取失败，请重试');

@@ -263,6 +263,8 @@ export default {
                         Created: record.Created,
                         Updated: record.Updated,
                         ImgUrl: record.ImgUrl,
+                        Url: record.Url,
+
                     };
                 } else {
                     this.$message.error('获取失败，请重试');
