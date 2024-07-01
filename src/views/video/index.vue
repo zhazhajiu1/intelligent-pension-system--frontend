@@ -30,7 +30,7 @@ export default {
   },
 
   mounted() {
-    this.getSRC();
+    // this.getSRC();
   },
 
   methods: {

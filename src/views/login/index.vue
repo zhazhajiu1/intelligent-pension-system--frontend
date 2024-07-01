@@ -51,6 +51,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import router from '@/router'
+import api from '@/api/user'
 
 export default {
   name: 'Login',
@@ -106,30 +107,35 @@ export default {
         this.$refs.password.focus()
       })
     },
+
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-
-          })
-
-          // 直接跳转到系统的主页面
-          // this.$router.push({ path: this.redirect || '/' })
-          // this.loading = false
-
-
+          const user = {
+            UserRole: this.loginForm.userrole,
+            UserName: this.loginForm.username,
+            Password: this.loginForm.password,
+          };
+          api.login(user).then(res => {
+            this.$message({
+              showClose: true,
+              message: '登陆成功...',
+              type: 'success'
+            });
+            this.loading = true;
+            localStorage.setItem('token', res.data.token);  // 修改为从响应中获取token
+            console.log("token", res.data.token);
+            this.$router.push('/');
+          }).catch(err => {
+            console.log(err);
+          });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
     }
+
   },
   components: { router }
 }
