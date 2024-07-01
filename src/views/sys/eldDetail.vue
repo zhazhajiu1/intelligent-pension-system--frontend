@@ -7,8 +7,8 @@
                     <div class="block">
                         <h1>{{ userInfo.UserName }}的详情信息</h1>
                         <!-- 显示图片 -->
-                        <div v-if="userInfo.ImgUrl">
-                            <img :src="userInfo.ImgUrl" alt="图片加载失败" style="max-width: 30%;">
+                        <div v-if="userInfo.Url">
+                            <img :src="userInfo.Url" alt="图片加载失败" style="max-width: 30%;">
                         </div>
                     </div>
                 </el-col>
@@ -19,7 +19,7 @@
         <el-divider></el-divider>
 
         <el-card>
-            <el-descriptions class="margin-top" title="用户信息" :column="3" :size="size" border>
+            <el-descriptions class="margin-top" title="详情信息" :column="3" border>
                 <template slot="extra">
                     <el-button type="primary" size="small" @click="updateStaff()">操作</el-button>
                 </template>
@@ -37,13 +37,15 @@
                     </template>
                     {{ userInfo.ID || '待填写' }}
                 </el-descriptions-item>
-                <el-descriptions-item>
+
+                <!-- <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-success"></i>
                         状态
                     </template>
                     <el-tag type="success">{{ userInfo.IsActive === '0' ? '已启用' : '未启用' }}</el-tag>
-                </el-descriptions-item>
+                </el-descriptions-item> -->
+
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-date"></i>
@@ -123,19 +125,45 @@
                 <el-form-item label="电话号码">
                     <el-input v-model="editForm.Phone" required></el-input>
                 </el-form-item>
+
                 <el-form-item label="性别">
-                    <el-input v-model="editForm.Sex" required></el-input>
+                    <el-select v-model="editForm.Sex" placeholder="请选择">
+                        <el-option v-for="item in sexOptions" :key="item.value" :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
+
+                <!-- <el-form-item label="性别">
+                    <el-input v-model="editForm.Sex" required></el-input>
+                </el-form-item> -->
+
                 <el-form-item label="年龄">
                     <el-input v-model="editForm.Age" required></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input v-model="editForm.Password" required></el-input>
-                </el-form-item>
-                <el-form-item label="是否启用">
-                    <el-input v-model="editForm.IsActive" required></el-input>
+
+                <el-form-item label="生日">
+                    <el-input v-model="editForm.Birthday" required></el-input>
                 </el-form-item>
 
+                <el-form-item label="健康状态">
+                    <el-select v-model="editForm.Healthy" placeholder="请选择">
+                        <el-option v-for="item in healthOptions" :key="item.value" :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="监护人">
+                    <el-input v-model="editForm.GuardianName" required></el-input>
+                </el-form-item>
+                <el-form-item label="监护人电话">
+                    <el-input v-model="editForm.GuardianPhone" required></el-input>
+                </el-form-item>
+
+                <!-- <el-form-item label="是否启用">
+                    <el-input v-model="editForm.IsActive" required></el-input>
+                </el-form-item> -->
 
                 <el-form-item label="上传图片">
                     <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
@@ -146,8 +174,6 @@
                             @click="submitUpload">上传到服务器</el-button>
                     </el-upload>
                 </el-form-item>
-
-
 
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">提交修改</el-button>
@@ -163,10 +189,37 @@ import api from '@/api/eld'
 export default {
     data() {
         return {
+            healthOptions: [{
+                value: '健康',
+                label: '健康'
+            }, {
+                value: '良好',
+                label: '良好'
+            }, {
+                value: '及格',
+                label: '及格'
+            }, {
+                value: '疾病',
+                label: '疾病'
+            }, {
+                value: '严重',
+                label: '严重'
+            }],
+
+            sexOptions: [{
+                value: 'f',
+                label: '女'
+            }, {
+                value: 'm',
+                label: '男'
+            }],
+
+            // value: '',
             form: {
                 ID: '',
             },
             editForm: {
+                Url:'',
                 UserName: '',
                 Phone: '',
                 Sex: '',
@@ -183,6 +236,7 @@ export default {
             },
 
             userInfo: {
+                Url: '',
                 ID: '',
                 UserName: '',
                 Phone: '',
@@ -233,6 +287,7 @@ export default {
         handleUploadRequest({ file }) {
             this.videoFile = file;
         },
+
         submitUpload() {
             if (!this.videoFile) {
                 alert('请选择图片文件');
@@ -285,7 +340,7 @@ export default {
                         IsActive: record.IsActive,
                         Created: record.Created,
                         Updated: record.Updated,
-                        ImgUrl: record.ImgUrl,
+                        Url: record.Url,
                         Birthday: record.Birthday,
                         Healthy: record.Healthy,
                         GuardianName: record.GuardianName,
@@ -316,6 +371,7 @@ export default {
                 IsActive: '',
             };
         },
+
         handleSubmit() {
             this.editForm.ID = this.userInfo.ID;
 

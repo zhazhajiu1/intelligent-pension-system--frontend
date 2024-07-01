@@ -15,7 +15,7 @@
         <el-divider></el-divider>
 
         <el-card>
-            <el-descriptions class="margin-top" title="用户信息" :column="3" :size="size" border>
+            <el-descriptions class="margin-top" title="详情信息" :column="3" border>
                 <template slot="extra">
                     <el-button type="primary" size="small" @click="updateStaff()">操作</el-button>
                 </template>
@@ -84,7 +84,7 @@
                 </el-descriptions-item>
             </el-descriptions>
 
-            <br><br>   
+            <br><br>
         </el-card>
 
         <el-dialog :visible.sync="editDialogVisible" title="编辑信息">
@@ -97,7 +97,10 @@
                     <el-input v-model="editForm.Phone" required></el-input>
                 </el-form-item>
                 <el-form-item label="性别">
-                    <el-input v-model="editForm.Sex" required></el-input>
+                    <el-select v-model="editForm.Sex" placeholder="请选择">
+                        <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="年龄">
                     <el-input v-model="editForm.Age" required></el-input>
@@ -105,8 +108,11 @@
                 <el-form-item label="密码">
                     <el-input v-model="editForm.Password" required></el-input>
                 </el-form-item>
+
                 <el-form-item label="是否启用">
-                    <el-input v-model="editForm.IsActive" required></el-input>
+                    <el-switch v-model="editForm.IsActive" active-value="0" inactive-value="1" active-color="#13ce66"
+                        inactive-color="#ff4949">
+                    </el-switch> 
                 </el-form-item>
 
                 <el-form-item>
@@ -128,6 +134,14 @@ export default {
             form: {
                 ID: '',
             },
+
+            sexOptions: [{
+                value: 'f',
+                label: '女'
+            }, {
+                value: 'm',
+                label: '男'
+            }],
 
             editForm: {
                 ID: '',

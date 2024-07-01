@@ -11,6 +11,13 @@ import request from '@/utils/request'
 export default {
   getURL() {
     return request({
+      url: '/video/getUrl2',
+      method: 'get'
+    })
+  },
+
+  getURL_local() {
+    return request({
       url: '/video/getUrl',
       method: 'get'
     })
