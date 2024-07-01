@@ -245,27 +245,34 @@ export default {
       };
     },
 
+    validateForm() {
+      // 检查 editForm 中的每个值是否为空
+      return Object.values(this.editForm).every(value => value !== '');
+    },
+
     handleSubmit() {
-      // this.editForm.Healthy = this.value;
+      if (this.validateForm()) {
+        api.employeeAdd(this.editForm).then(response => {
+          const res = response; // axios 返回的数据在 response 中
+          if (res.code === 20000) {
+            this.$message({
+              showClose: true,
+              message: '添加成功！',
+              type: 'success',
+            });
 
-      api.employeeAdd(this.editForm).then(response => {
-        const res = response; // axios 返回的数据在 response 中
-        if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '添加成功！',
-            type: 'success',
-          });
-
-          this.editDialogVisible = false;
-          this.getStaff();
-        } else {
+            this.editDialogVisible = false;
+            this.getStaff();
+          } else {
+            this.$message.error('添加失败，请重试');
+          }
+        }).catch(err => {
+          console.log(err);
           this.$message.error('添加失败，请重试');
-        }
-      }).catch(err => {
-        console.log(err);
-        this.$message.error('添加失败，请重试');
-      });
+        });
+      } else {
+        this.$message.error('请填写完整的信息');
+      }
     },
 
     getStaff() {

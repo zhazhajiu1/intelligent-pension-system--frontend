@@ -109,9 +109,6 @@ export default {
         Sex: '',
         Age: '',
         Password: '',
-        IsActive: '',
-        Created: '',
-        Updated: '',
       },
 
       editDialogVisible: false,
@@ -132,6 +129,37 @@ export default {
   },
 
   methods: {
+
+    validateForm() {
+      // 检查 editForm 中的每个值是否为空
+      return Object.values(this.editForm).every(value => value !== '');
+    },
+
+    handleSubmit() {
+      if (this.validateForm()) {
+        api.employeeAdd(this.editForm).then(response => {
+          const res = response; // axios 返回的数据在 response 中
+          if (res.code === 20000) {
+            this.$message({
+              showClose: true,
+              message: '添加成功！',
+              type: 'success',
+            });
+
+            this.editDialogVisible = false;
+            this.getStaff();
+          } else {
+            this.$message.error('添加失败，请重试');
+          }
+        }).catch(err => {
+          console.log(err);
+          this.$message.error('添加失败，请重试');
+        });
+      } else {
+        this.$message.error('请填写完整的信息');
+      }
+    },
+
     formatSex(row, column, cellValue) {
       return cellValue === 'f' ? '女' : cellValue === 'm' ? '男' : cellValue;
     },
@@ -148,29 +176,7 @@ export default {
         Sex: '',
         Age: '',
         Password: '',
-        IsActive: '',
       };
-    },
-
-    handleSubmit() {
-      api.employeeAdd(this.editForm).then(response => {
-        const res = response; // axios 返回的数据在 response 中
-        if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '添加成功！',
-            type: 'success',
-          });
-
-          this.editDialogVisible = false;
-          this.getStaff();
-        } else {
-          this.$message.error('添加失败，请重试');
-        }
-      }).catch(err => {
-        console.log(err);
-        this.$message.error('添加失败，请重试');
-      });
     },
 
     getStaff() {

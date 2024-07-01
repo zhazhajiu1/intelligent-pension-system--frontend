@@ -151,8 +151,6 @@ export default {
                 Age: '',
                 Password: '',
                 IsActive: '',
-                Created: '',
-                Updated: '',
             },
 
             userInfo: {

@@ -156,7 +156,6 @@ export default {
                 ID: '',
             },
             editForm: {
-                Url:'',
                 ID: '',
                 UserName: '',
                 Phone: '',
@@ -164,8 +163,6 @@ export default {
                 Age: '',
                 Password: '',
                 IsActive: '',
-                Created: '',
-                Updated: '',
                 ImgUrl: '',
             },
             userInfo: {

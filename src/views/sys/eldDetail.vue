@@ -38,14 +38,6 @@
                     {{ userInfo.ID || '待填写' }}
                 </el-descriptions-item>
 
-                <!-- <el-descriptions-item>
-                    <template slot="label">
-                        <i class="el-icon-success"></i>
-                        状态
-                    </template>
-                    <el-tag type="success">{{ userInfo.IsActive === '0' ? '已启用' : '未启用' }}</el-tag>
-                </el-descriptions-item> -->
-
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-date"></i>
@@ -72,7 +64,7 @@
                         <i class="el-icon-lock"></i>
                         生日
                     </template>
-                    {{ formatDate(userInfo.Birthday) || '待填写' }}
+                    {{ userInfo.Birthday || '待填写' }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">
@@ -212,15 +204,10 @@ export default {
                 ID: '',
             },
             editForm: {
-                Url: '',
                 UserName: '',
                 Phone: '',
                 Sex: '',
                 Age: '',
-                Password: '',
-                IsActive: '',
-                Created: '',
-                Updated: '',
                 Birthday: '',
                 Healthy: '',
                 GuardianName: '',

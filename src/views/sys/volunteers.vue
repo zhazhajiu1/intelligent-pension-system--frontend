@@ -71,11 +71,6 @@
         <el-form-item label="密码">
           <el-input v-model="editForm.Password" required></el-input>
         </el-form-item>
-        <!-- <el-form-item label="是否启用">
-          <el-switch v-model="editForm.IsActive" active-value="0" inactive-value="1" active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
-        </el-form-item> -->
 
         <el-form-item label="上传图片">
           <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
@@ -120,9 +115,6 @@ export default {
         Sex: '',
         Age: '',
         Password: '',
-        IsActive: '',
-        Created: '',
-        Updated: '',
         ImgUrl: '',
       },
 
@@ -208,25 +200,34 @@ export default {
       };
     },
 
-    handleSubmit() {
-      api.employeeAdd(this.editForm).then(response => {
-        const res = response; // axios 返回的数据在 response 中
-        if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '添加成功！',
-            type: 'success',
-          });
+    validateForm() {
+      // 检查 editForm 中的每个值是否为空
+      return Object.values(this.editForm).every(value => value !== '');
+    },
 
-          this.editDialogVisible = false;
-          this.getStaff();
-        } else {
+    handleSubmit() {
+      if (this.validateForm()) {
+        api.employeeAdd(this.editForm).then(response => {
+          const res = response; // axios 返回的数据在 response 中
+          if (res.code === 20000) {
+            this.$message({
+              showClose: true,
+              message: '添加成功！',
+              type: 'success',
+            });
+
+            this.editDialogVisible = false;
+            this.getStaff();
+          } else {
+            this.$message.error('添加失败，请重试');
+          }
+        }).catch(err => {
+          console.log(err);
           this.$message.error('添加失败，请重试');
-        }
-      }).catch(err => {
-        console.log(err);
-        this.$message.error('添加失败，请重试');
-      });
+        });
+      } else {
+        this.$message.error('请填写完整的信息');
+      }
     },
 
     getStaff() {
