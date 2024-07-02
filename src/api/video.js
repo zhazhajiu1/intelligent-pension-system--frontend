@@ -37,6 +37,13 @@ export default {
     })
   },
 
+  getURL4() {
+    return request({
+      url: '/video/getUrl4',
+      method: 'get'
+    })
+  },
+
   sendCoordinates() {
     return request({
       url: '/video/getXY',

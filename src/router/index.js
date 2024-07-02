@@ -24,6 +24,7 @@ import EldDetail from '@/views/sys/eldDetail.vue'
 import UnknowIndex from '@/views/historyData/unknowIndex.vue'
 import EmotionDetail from '@/views/historyData/emotionDetail.vue'
 import IntrusionDetection from '@/views/video/IntrusionDetection.vue'
+import FaceRecord from '@/views/video/faceRecord.vue'
 
 export const constantRoutes = [
   {
@@ -82,7 +83,13 @@ export const constantRoutes = [
         name: 'intrusionDetection',
         component: IntrusionDetection,
         meta: { title: '入侵检测', icon: 'el-icon-video-camera' }
-      }
+      },
+      {
+        path: 'faceRecord',
+        name: 'faceRecord',
+        component: FaceRecord,
+        meta: { title: '人脸录入', icon: 'el-icon-video-camera' }
+      },
     ]
   }
 ]

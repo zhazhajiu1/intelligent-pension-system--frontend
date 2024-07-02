@@ -8,12 +8,19 @@
               <video ref="videoElement" autoplay playsinline style="width: 100%; height: 100%"></video>
               <canvas ref="drawCanvas" style="position: absolute; top: 0; left: 0;"></canvas>
             </div>
+  
+            <div>处理后：</div>
+            <div>
+              <img :src="videoSource4" style="width: 100%; height: 100%">
+            </div>
+  
             <el-divider></el-divider>
             <el-card class="box-card">
               <button @click="getSRC">获取视频源</button>
               <button @click="startDraw">开始绘制</button>
               <button @click="clearAll">清除所有绘制</button>
               <button @click="sendPoints">发送坐标</button>
+              <button @click="getSRC4">获取新视频</button>
             </el-card>
           </div>
         </el-main>
@@ -28,6 +35,7 @@
     data() {
       return {
         videoSource: '',
+        videoSource4: '',
         canvasWidth: 0,
         canvasHeight: 0,
         isDrawing: false,
@@ -42,40 +50,58 @@
     },
   
     methods: {
-      getSRC() {
-        api.getURL3().then(response => {
-          const res = response;
-          if (res.code === 20000) {
+      async getSRC() {
+        try {
+          const response = await api.getURL3();
+          if (response.code === 20000) {
             this.$message({
               showClose: true,
               message: '获取成功！',
               type: 'success',
             });
-            this.videoSource = res.src.video1;
-            this.canvasWidth = res.data.width;
-            this.canvasHeight = res.data.height;
+            this.videoSource = response.src.video1;
+            this.canvasWidth = response.data.width;
+            this.canvasHeight = response.data.height;
             this.playVideo(this.videoSource);
           } else {
             this.$message.error('获取失败，请重试');
           }
-        }).catch(err => {
+        } catch (err) {
           console.log(err);
           this.$message.error('获取失败，请重试');
-        });
+        }
+      },
+  
+      async getSRC4() {
+        try {
+          const response = await api.getURL4();
+          if (response.code === 20000) {
+            this.$message({
+              showClose: true,
+              message: '获取成功！',
+              type: 'success',
+            });
+            this.videoSource4 = response.src.video1;
+          } else {
+            this.$message.error('获取失败，请重试');
+          }
+        } catch (err) {
+          console.log(err);
+          this.$message.error('获取失败，请重试');
+        }
       },
   
       playVideo(src) {
         const videoElement = this.$refs.videoElement;
         videoElement.srcObject = null;
         videoElement.src = src;
-        videoElement.play();
-        // 设置视频元素和画布的大小
         videoElement.addEventListener('loadedmetadata', () => {
           this.$refs.drawCanvas.width = this.canvasWidth;
           this.$refs.drawCanvas.height = this.canvasHeight;
-          videoElement.style.width = this.canvasWidth + 'px';
-          videoElement.style.height = this.canvasHeight + 'px';
+          videoElement.style.width = `${this.canvasWidth}px`;
+          videoElement.style.height = `${this.canvasHeight}px`;
         });
+        videoElement.play();
       },
   
       initCanvas() {
@@ -125,10 +151,11 @@
         this.points = [];
       },
   
-      sendPoints() {
+      async sendPoints() {
         if (this.points.length === 4) {
           const coordinates = this.points.map(point => ({ x: Math.floor(point.x), y: Math.floor(point.y) }));
-          api.sendCoordinates(coordinates).then(response => {
+          try {
+            const response = await api.sendCoordinates(coordinates);
             if (response.code === 20000) {
               this.$message({
                 showClose: true,
@@ -138,10 +165,10 @@
             } else {
               this.$message.error('坐标发送失败，请重试');
             }
-          }).catch(err => {
+          } catch (err) {
             console.log(err);
             this.$message.error('坐标发送失败，请重试');
-          });
+          }
         } else {
           this.$message.error('请先绘制一个矩形');
         }
