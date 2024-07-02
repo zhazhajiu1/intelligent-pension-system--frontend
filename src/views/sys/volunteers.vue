@@ -21,7 +21,7 @@
     <el-divider></el-divider>
     <!-- 结果列表 -->
     <el-card>
-      <el-table :data="tableData" border style="width: 95%">
+      <el-table :data="pagedTableData" border style="width: 95%">
         <el-table-column fixed prop="id" label="序号" width="150"></el-table-column>
         <el-table-column prop="name" label="姓名" width="180"></el-table-column>
         <el-table-column prop="sex" label="性别" width="150" :formatter="formatSex"></el-table-column>
@@ -30,7 +30,6 @@
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
             <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
-            <!-- <el-button @click="openEditForm(scope.row)" type="text" size="small">编辑</el-button> -->
             <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
           </template>
         </el-table-column>
@@ -39,16 +38,10 @@
 
 
     <!-- 分页组件 -->
-    <!-- <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="searchModel.pageNo"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="searchModel.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-    >
-    </el-pagination> -->
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+      :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
 
     <el-dialog :visible.sync="editDialogVisible" title="编辑信息">
       <el-form ref="editForm" :model="editForm" label-width="150px">
@@ -123,8 +116,9 @@ export default {
       sex: '',
       age: '',
       token: '',
+      pagedTableData: [],
       tableData: [],
-      pageSize: 5,
+      pageSize: 10,
       currentPage: 1,
       total: 0,
 
@@ -231,17 +225,20 @@ export default {
     },
 
     getStaff() {
-      api.getList(this.form).then(response => {
-        const res = response; // axios 返回的数据在 response 中
-        if (res.code === 20000) {
-          // this.$message({
-          //   showClose: true,
-          //   message: '获取成功！',
-          //   type: 'success',
-          // });
+      const params = {
+        ...this.form,
+      };
 
-          const records = res.data.rows;
-          this.tableData = records.map(record => ({
+      api.getList(params).then(response => {
+        const res = response;
+        if (res.code === 20000) {
+          this.$message({
+            showClose: true,
+            message: '获取成功！',
+            type: 'success',
+          });
+
+          this.tableData = res.data.rows.map(record => ({
             id: record.ID,
             name: record.UserName,
             sex: record.Sex,
@@ -250,6 +247,8 @@ export default {
           }));
 
           this.total = res.data.total; // 更新总记录数
+          this.currentPage = 1; // 回到第一页
+          this.paginateData(); // 分页显示数据
 
         } else {
           this.$message.error('获取失败，请重试');
@@ -295,7 +294,22 @@ export default {
 
     viewDetail(id) {
       this.$router.push({ path: `/sys/volunteerDetail/${id}` });
-    }
+    },
+
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.paginateData();
+    },
+
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.paginateData();
+    },
+
+    paginateData() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      this.pagedTableData = this.tableData.slice(startIndex, startIndex + this.pageSize);
+    },
   },
 
   mounted() {

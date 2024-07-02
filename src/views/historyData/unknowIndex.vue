@@ -36,7 +36,6 @@
     <!-- 视频播放对话框 -->
     <div class="video_open">
       <el-dialog :visible.sync="viewDialogVisible" title="陌生人记录" width="800px">
-        <!-- <img :src="this.currentVideoUrl" alt="图片加载失败" style="max-width: 100%;"> -->
         <img :src="currentVideoUrl" alt="图片加载失败" controls class="video-player"></img>
       </el-dialog>
     </div>
