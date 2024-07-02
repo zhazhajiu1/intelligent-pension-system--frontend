@@ -50,7 +50,7 @@
                         <i class="el-icon-date"></i>
                         抓拍时间
                     </template>
-                    {{ formatDate(userInfo.ElderlyCreated) || '待填写' }}
+                    {{ formatDate(userInfo.Created) || '待填写' }}
                 </el-descriptions-item>
 
                 <el-descriptions-item>
@@ -109,7 +109,7 @@
                         <i class="el-icon-date"></i>
                         创建时间
                     </template>
-                    {{ formatDate(userInfo.Created) || '待填写' }}
+                    {{ formatDate(userInfo.ElderlyCreated) || '待填写' }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">

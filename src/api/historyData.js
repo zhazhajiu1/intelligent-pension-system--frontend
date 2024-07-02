@@ -9,7 +9,7 @@ export default {
     })
   },
 
-  deleteVideoById(id) {
+  emotionDelete(id) {
     return request({
       url: `/video/emotionDelete`,
       method: 'delete',
@@ -38,6 +38,22 @@ export default {
       url: '/video/unknowList',
       method: 'get',
       params: data
+    })
+  },
+
+  unknowDelete(id) {
+    return request({
+      url: `/video/unknowDelete`,
+      method: 'delete',
+      params: id
+    })
+  },
+
+  fallDelete(id) {
+    return request({
+      url: `/video/fallDelete`,
+      method: 'delete',
+      params: id
     })
   },
 

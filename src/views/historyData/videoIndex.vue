@@ -6,8 +6,9 @@
         <el-col :span="20">
           <div class="block">
 
-            <el-input v-model="form.Date" placeholder="请输入日期"></el-input>
-
+            <el-date-picker v-model="form.Date" type="date" placeholder="选择日期" format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd" required>
+            </el-date-picker>
             <el-button type="primary" round icon="el-icon-search" @click="getStaff()">查询</el-button>
           </div>
         </el-col>
@@ -18,7 +19,7 @@
     <el-divider></el-divider>
     <!-- 结果列表 -->
     <el-card>
-      <el-table :data="tableData" border style="width: 95%">
+      <el-table :data="pagedTableData" border style="width: 95%">
         <el-table-column fixed prop="id" label="序号" width="150"></el-table-column>
         <el-table-column prop="Created" label="抓拍时间" width="300"></el-table-column>
         <el-table-column prop="ImgUrl" label="图片" width="550"></el-table-column>
@@ -40,16 +41,10 @@
 
 
     <!-- 分页组件 -->
-    <!-- <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="searchModel.pageNo"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="searchModel.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-    >
-    </el-pagination> -->
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+      :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
 
   </div>
 </template>
@@ -78,13 +73,13 @@ export default {
       age: '',
       token: '',
       tableData: [],
+      pagedTableData: [],
       pageSize: 5,
       currentPage: 1,
       total: 0,
       viewDialogVisible: false,  // 控制图片对话框的显示
       currentVideoUrl: '',  // 当前播放的图片URL
       videoSource: '',
-
     }
   },
 
@@ -102,8 +97,12 @@ export default {
     },
 
     getStaff() {
-      api.getFall(this.form).then(response => {
-        const res = response; // axios 返回的数据在 response 中
+      const params = {
+        ...this.form,
+      };
+
+      api.getFall(params).then(response => {
+        const res = response;
         if (res.code === 20000) {
           this.$message({
             showClose: true,
@@ -111,16 +110,16 @@ export default {
             type: 'success',
           });
 
-          const records = res.data.rows;
-          this.tableData = records.map(record => ({
+          this.tableData = res.data.rows.map(record => ({
             id: record.ID,
-            ElderlyID: record.ElderlyID,
             ElderlyName: record.ElderlyName,
+            Created: this.formatDate(record.Created),
             ImgUrl: record.Url,
-            Created: record.Created,
           }));
 
           this.total = res.data.total; // 更新总记录数
+          this.currentPage = 1; // 回到第一页
+          this.paginateData(); // 分页显示数据
 
         } else {
           this.$message.error('获取失败，请重试');
@@ -142,7 +141,7 @@ export default {
         type: 'warning'
       }).then(() => {
 
-        api.deleteVideoById(this.id_delete).then(response => {
+        api.fallDelete(this.id_delete).then(response => {
           const res = response; // axios 返回的数据在 response 中
           if (res.code === 20000) {
             this.$message({
@@ -167,6 +166,21 @@ export default {
     viewDetail(url) {
       this.currentVideoUrl = url;
       this.viewDialogVisible = true;
+    },
+
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.paginateData();
+    },
+
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.paginateData();
+    },
+
+    paginateData() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      this.pagedTableData = this.tableData.slice(startIndex, startIndex + this.pageSize);
     },
   },
 
