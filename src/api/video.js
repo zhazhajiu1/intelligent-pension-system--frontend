@@ -44,10 +44,11 @@ export default {
     })
   },
 
-  sendCoordinates() {
+  sendCoordinates(data) {
     return request({
       url: '/video/getXY',
-      method: 'post'
+      method: 'post',
+      data: data
     })
   },
 }
