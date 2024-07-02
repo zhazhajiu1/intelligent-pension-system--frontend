@@ -148,7 +148,7 @@ export default {
             },
 
             userInfo: {
-                ElderlyID: '',
+                // ElderlyID: '',
                 ElderlyUrl: '',
                 ElderlyCreated: '',
                 Url: '',
@@ -216,7 +216,7 @@ export default {
                         Healthy: record.Healthy,
                         GuardianName: record.GuardianName,
                         GuardianPhone: record.GuardianPhone,
-                        ElderlyID: record.ElderlyID,
+                        // ElderlyID: record.ElderlyID,
                         ElderlyUrl: record.ElderlyUrl,
                         ElderlyCreated: record.ElderlyCreated,
                     };

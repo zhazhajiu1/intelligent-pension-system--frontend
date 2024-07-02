@@ -123,8 +123,12 @@ export default {
               type: 'success'
             });
             this.loading = true;
-            localStorage.setItem('token', res.data.token);  // 修改为从响应中获取token
+            localStorage.setItem('token', res.data.token);  // 从响应中获取token
             console.log("token", res.data.token);
+
+            localStorage.setItem('token', res.data.token);  // 获取role
+            console.log("token", res.data.token);
+
             this.$router.push('/');
           }).catch(err => {
             console.log(err);
