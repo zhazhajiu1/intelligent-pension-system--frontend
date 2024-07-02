@@ -28,5 +28,19 @@ export default {
       url: '/video/stopVideo',
       method: 'get'
     })
-  }
+  },
+
+  getURL3() {
+    return request({
+      url: '/video/getUrl3',
+      method: 'get'
+    })
+  },
+
+  sendCoordinates() {
+    return request({
+      url: '/video/getXY',
+      method: 'post'
+    })
+  },
 }

@@ -25,7 +25,7 @@
         <el-table-column prop="ImgUrl" label="图片" width="550"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button @click="viewDetail(scope.row.url)" type="text" size="small">查看</el-button>
+            <el-button @click="viewDetail(scope.row.ImgUrl)" type="text" size="small">查看</el-button>
             <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
           </template>
         </el-table-column>

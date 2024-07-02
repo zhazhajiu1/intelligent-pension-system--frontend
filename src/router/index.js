@@ -23,7 +23,7 @@ import VolunteerDetail from '@/views/sys/volunteerDetail.vue'
 import EldDetail from '@/views/sys/eldDetail.vue'
 import UnknowIndex from '@/views/historyData/unknowIndex.vue'
 import EmotionDetail from '@/views/historyData/emotionDetail.vue'
-
+import IntrusionDetection from '@/views/video/IntrusionDetection.vue'
 
 export const constantRoutes = [
   {
@@ -69,12 +69,21 @@ export const constantRoutes = [
     path: '/video',
     component: Layout,
     redirect: '/video/index',
-    children: [{
-      path: 'index',
-      name: 'video',
-      component: Video,
-      meta: { title: '实时保护', icon: 'el-icon-video-camera' }
-    }]
+    meta: { title: '实时保护', icon: 'example' },
+    children: [
+      {
+        path: 'index',
+        name: 'video',
+        component: Video,
+        meta: { title: '情绪监测', icon: 'el-icon-video-camera' }
+      },
+      {
+        path: 'intrusionDetection',
+        name: 'intrusionDetection',
+        component: IntrusionDetection,
+        meta: { title: '入侵检测', icon: 'el-icon-video-camera' }
+      }
+    ]
   }
 ]
 
