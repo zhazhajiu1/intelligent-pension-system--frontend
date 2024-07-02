@@ -5,14 +5,15 @@
             <el-row>
                 <el-col :span="20">
                     <div class="block">
-                        <h1>{{ userInfo.UserName }}的情绪详情</h1>
+                        <h1>{{ userInfo.UserName }}的开心时刻</h1>
                         <!-- 显示图片 -->
-                        <div v-if="userInfo.Url">
+                        <div v-if="userInfo.ElderlyUrl" >
                             <img :src="userInfo.Url" alt="图片加载失败" style="max-width: 30%;">
-                        </div>
-                        <div v-if="userInfo.ElderlyUrl">
                             <img :src="userInfo.ElderlyUrl" alt="图片加载失败" style="max-width: 30%;">
                         </div>
+                        <!-- <div v-if="userInfo.ElderlyUrl">
+                            <img :src="userInfo.ElderlyUrl" alt="图片加载失败" style="max-width: 30%;">
+                        </div> -->
                     </div>
                 </el-col>
                 <el-col :span="4"> </el-col>

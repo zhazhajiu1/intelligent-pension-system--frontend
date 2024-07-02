@@ -15,15 +15,13 @@
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" autocomplete="off" size="medium"
         style="position: relative; top:50px; left: 500px;">
         <div style="padding-top: 10px">
-
           <el-form-item label="角色" prop="userrole">
             <el-col :span="5">
               <el-radio v-model="ruleForm.userrole" label="2">义工</el-radio>
               <el-radio v-model="ruleForm.userrole" label="1">员工</el-radio>
             </el-col>
           </el-form-item>
-
-          <el-form-item label="上传图片">
+          <el-form-item v-if="ruleForm.userrole === '2'" label="上传图片">
             <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
               :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
               :http-request="handleUploadRequest" accept="image/*">
@@ -251,6 +249,11 @@ export default {
 
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
+          if (this.ruleForm.userrole === '2' && !this.ruleForm.yun_url) {
+            this.$message.error('请上传照片');
+            return;
+          }
+
           const user = {
             UserRole: this.ruleForm.userrole,
             UserName: this.ruleForm.username,
