@@ -41,6 +41,9 @@ export default {
 
   methods: {
     getSRC() {
+
+      // 获取网络摄像头视频流
+
       api.getURL().then(response => {
         const res = response; // axios 返回的数据在 response 中
         if (res.code === 20000) {

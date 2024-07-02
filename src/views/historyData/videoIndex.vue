@@ -20,16 +20,23 @@
     <el-card>
       <el-table :data="tableData" border style="width: 95%">
         <el-table-column fixed prop="id" label="序号" width="150"></el-table-column>
-        <el-table-column prop="ImgUrl" label="图片" width="500"></el-table-column>
-        <el-table-column prop="Created" label="抓拍时间" width="350"></el-table-column>
+        <el-table-column prop="Created" label="抓拍时间" width="300"></el-table-column>
+        <el-table-column prop="ImgUrl" label="图片" width="550"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="viewDetail(scope.row.url)" type="text" size="small">查看</el-button>
             <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+    <!-- 视频播放对话框 -->
+    <div class="video_open">
+      <el-dialog :visible.sync="viewDialogVisible" title="摔倒记录" width="800px">
+        <img :src="currentVideoUrl" controls class="video-player"></img>
+      </el-dialog>
+    </div>
 
 
     <!-- 分页组件 -->
@@ -62,6 +69,9 @@ export default {
         Age: '',
         Password: '',
       },
+      id_delete: {
+        ID: '',
+      },
 
       id: '',
       sex: '',
@@ -71,15 +81,25 @@ export default {
       pageSize: 5,
       currentPage: 1,
       total: 0,
-
+      viewDialogVisible: false,  // 控制图片对话框的显示
+      currentVideoUrl: '',  // 当前播放的图片URL
       videoSource: '',
-      id_delete: {
-        ID: '',
-      },
+
     }
   },
 
   methods: {
+    formatDate(date) {
+      if (!date) return '';
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
 
     getStaff() {
       api.getFall(this.form).then(response => {
@@ -96,7 +116,7 @@ export default {
             id: record.ID,
             ElderlyID: record.ElderlyID,
             ElderlyName: record.ElderlyName,
-            ImgUrl: record.ImgUrl,
+            ImgUrl: record.Url,
             Created: record.Created,
           }));
 
@@ -144,9 +164,10 @@ export default {
       })
     },
 
-    viewDetail(id) {
-      this.$router.push({ path: `/historyData/emotionDetail/${id}` });
-    }
+    viewDetail(url) {
+      this.currentVideoUrl = url;
+      this.viewDialogVisible = true;
+    },
   },
 
   mounted() {
@@ -171,5 +192,11 @@ export default {
 
 .el-dialog .el-input {
   width: 60%;
+}
+
+.video-player {
+  width: 100%;
+  height: 450px;
+  /* 固定高度 */
 }
 </style>
