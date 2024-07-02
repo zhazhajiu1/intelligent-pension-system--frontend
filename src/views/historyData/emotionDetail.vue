@@ -6,14 +6,17 @@
                 <el-col :span="20">
                     <div class="block">
                         <h1>{{ userInfo.UserName }}的开心时刻</h1>
+
+                        <el-divider></el-divider>
                         <!-- 显示图片 -->
-                        <div v-if="userInfo.ElderlyUrl" >
+                        <!-- <div v-if="userInfo.ElderlyUrl" >
+                            <img :src="userInfo.ElderlyUrl" alt="图片加载失败" style="max-width: 30%;">
+                        </div> -->
+
+                        <div v-if="userInfo.Url">
                             <img :src="userInfo.Url" alt="图片加载失败" style="max-width: 30%;">
                             <img :src="userInfo.ElderlyUrl" alt="图片加载失败" style="max-width: 30%;">
                         </div>
-                        <!-- <div v-if="userInfo.ElderlyUrl">
-                            <img :src="userInfo.ElderlyUrl" alt="图片加载失败" style="max-width: 30%;">
-                        </div> -->
                     </div>
                 </el-col>
                 <el-col :span="4"> </el-col>
@@ -25,7 +28,6 @@
         <el-card>
             <el-descriptions class="margin-top" title="详情信息" :column="3" border>
                 <template slot="extra">
-                    <el-button type="primary" size="small" @click="updateStaff()">操作</el-button>
                 </template>
                 <el-descriptions-item>
                     <template slot="label">
@@ -211,12 +213,10 @@ export default {
                         Created: record.Created,
                         Updated: record.Updated,
                         Url: record.Url,
-                        ImgUrl: record.ImgUrl,
                         Birthday: record.Birthday,
                         Healthy: record.Healthy,
                         GuardianName: record.GuardianName,
                         GuardianPhone: record.GuardianPhone,
-                        // ElderlyID: record.ElderlyID,
                         ElderlyUrl: record.ElderlyUrl,
                         ElderlyCreated: record.ElderlyCreated,
                     };

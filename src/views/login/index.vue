@@ -116,29 +116,37 @@ export default {
             UserName: this.loginForm.username,
             Password: this.loginForm.password,
           };
-          api.login(user).then(res => {
-            this.$message({
-              showClose: true,
-              message: '登陆成功...',
-              type: 'success'
+
+          api.login(user)
+            .then(res => {
+              this.$message({
+                showClose: true,
+                message: '登录成功',
+                type: 'success'
+              });
+
+              localStorage.setItem('token', res.data.token);
+              localStorage.setItem('role', res.data.role);
+              console.log("token", res.data.token);
+              console.log("role", res.data.role);
+
+              // 设置 loading 状态为 true
+              this.loading = true;
+
+              // 跳转到首页
+              this.$router.push('/');
+            })
+            .catch(err => {
+              console.error('登录失败:', err);
+              this.$message.error('登录失败，请检查用户名和密码');
             });
-            this.loading = true;
-            localStorage.setItem('token', res.data.token);  // 从响应中获取token
-            console.log("token", res.data.token);
-
-            localStorage.setItem('token', res.data.token);  // 获取role
-            console.log("token", res.data.token);
-
-            this.$router.push('/');
-          }).catch(err => {
-            console.log(err);
-          });
         } else {
-          console.log('error submit!!');
+          console.log('表单验证失败');
           return false;
         }
       });
     }
+
 
   },
   components: { router }

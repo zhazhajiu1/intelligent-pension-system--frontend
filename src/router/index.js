@@ -84,45 +84,45 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/sys/user',
     name: 'sysManage',
-    meta: { title: '系统管理', icon: 'example' },
+    meta: { title: '系统管理', icon: 'example', roles: ['0'] },
     children: [
       {
         path: 'user',
         name: 'user',
         component: UserManage,
-        meta: { title: '老人管理', icon: 'user' }
+        meta: { title: '老人管理', icon: 'user', roles: ['0', '1', '2'] }
       },
       {
         path: 'eldDetail/:id',
         name: 'eldDetail',
         component: EldDetail,
-        meta: { title: '老人详情', icon: 'el-icon-s-data' },
+        meta: { title: '老人详情', icon: 'el-icon-s-data', roles: ['0', '1', '2'] },
         hidden: true
       },
       {
         path: 'data',
         name: 'data',
         component: DataManage,
-        meta: { title: '义工管理', icon: 'el-icon-s-data' }
+        meta: { title: '义工管理', icon: 'el-icon-s-data', roles: ['0'] }
       },
       {
         path: 'volunteerDetail/:id',
         name: 'volunteerDetail',
         component: VolunteerDetail,
-        meta: { title: '义工详情', icon: 'el-icon-s-data' },
+        meta: { title: '义工详情', icon: 'el-icon-s-data', roles: ['0'] },
         hidden: true
       },
       {
         path: 'videoData',
         name: 'videoData',
         component: VideoDataManage,
-        meta: { title: '员工管理', icon: 'el-icon-s-data' }
+        meta: { title: '员工管理', icon: 'el-icon-s-data', roles: ['0'] }
       },
       {
         path: 'staffDetail/:id',
         name: 'staffDetail',
         component: StaffDetail,
-        meta: { title: '员工详情', icon: 'el-icon-s-data' },
+        meta: { title: '员工详情', icon: 'el-icon-s-data', roles: ['0'] },
         hidden: true
       }
     ]
@@ -132,32 +132,32 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/historyData/index',
     name: 'historyData',
-    meta: { title: '历史数据', icon: 'el-icon-s-data' },
+    meta: { title: '历史数据', icon: 'el-icon-s-data', roles: ['0', '1', '2'] },
     children: [
       {
         path: 'index',
         name: 'historyData',
         component: HistoryDataPhoto,
-        meta: { title: '情绪记录', icon: 'el-icon-s-data' }
+        meta: { title: '情绪记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       },
       {
         path: 'emotionDetail/:id',
         name: 'emotionDetail',
         component: EmotionDetail,
-        meta: { title: '情绪记录详情', icon: 'el-icon-s-data' },
+        meta: { title: '情绪记录详情', icon: 'el-icon-s-data', roles: ['0', '1', '2'] },
         hidden: true
       },
       {
         path: 'videoIndex',
         name: 'historyData',
         component: HistoryDataVideo,
-        meta: { title: '摔倒记录', icon: 'el-icon-s-data' }
+        meta: { title: '摔倒记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       },
       {
         path: 'unknowIndex',
         name: 'historyData',
         component: UnknowIndex,
-        meta: { title: '陌生人检测', icon: 'el-icon-s-data' }
+        meta: { title: '陌生人检测', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       }
     ]
   },
