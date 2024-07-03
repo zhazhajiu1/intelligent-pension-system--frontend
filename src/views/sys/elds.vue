@@ -48,42 +48,32 @@
         <el-form-item label="姓名">
           <el-input v-model="editForm.UserName" required></el-input>
         </el-form-item>
-
         <el-form-item label="电话号码">
           <el-input v-model="editForm.Phone" required></el-input>
         </el-form-item>
-
         <el-form-item label="性别">
           <el-select v-model="editForm.Sex" placeholder="请选择">
             <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="年龄">
-          <el-input v-model="editForm.Age" required></el-input>
-        </el-form-item>
-
         <el-form-item label="生日">
           <el-date-picker v-model="editForm.Birthday" type="date" placeholder="选择日期" format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd" required>
+            value-format="yyyy-MM-dd" required @change="calculateAge">
           </el-date-picker>
         </el-form-item>
-
         <el-form-item label="健康状态">
           <el-select v-model="editForm.Healthy" placeholder="请选择">
             <el-option v-for="item in healthOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-
         <el-form-item label="监护人">
           <el-input v-model="editForm.GuardianName" required></el-input>
         </el-form-item>
         <el-form-item label="监护人电话">
           <el-input v-model="editForm.GuardianPhone" required></el-input>
         </el-form-item>
-
         <el-form-item label="上传图片">
           <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
             :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
@@ -92,7 +82,6 @@
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
           </el-upload>
         </el-form-item>
-
         <el-form-item>
           <el-button type="primary" @click="handleSubmit()">提交</el-button>
           <el-button @click="onEditCancel">取消</el-button>
@@ -143,7 +132,7 @@ export default {
         Phone: '',
         Sex: '',
         Age: '',
-        Birthday: '1960-01-01 00:00:00',
+        Birthday: '',
         Healthy: '',
         GuardianName: '',
         GuardianPhone: '',
@@ -271,6 +260,18 @@ export default {
       }
     },
 
+    calculateAge() {
+      if (!this.editForm.Birthday) return;
+      const birthDate = new Date(this.editForm.Birthday);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDifference = today.getMonth() - birthDate.getMonth();
+      if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      this.editForm.Age = age;
+    },
+
     getStaff() {
       const params = {
         ...this.form,
@@ -279,11 +280,11 @@ export default {
       api.getList(params).then(response => {
         const res = response;
         if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '获取成功！',
-            type: 'success',
-          });
+          // this.$message({
+          //   showClose: true,
+          //   message: '获取成功！',
+          //   type: 'success',
+          // });
 
           this.tableData = res.data.rows.map(record => ({
             id: record.ID,
@@ -338,9 +339,6 @@ export default {
 
       })
     },
-    // resetForm() {
-
-    // },
 
     viewDetail(id) {
       this.$router.push({ path: `/sys/eldDetail/${id}` });
@@ -372,7 +370,6 @@ export default {
       this.getStaff(null);
     }
   },
-
 }
 </script>
 

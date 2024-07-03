@@ -26,6 +26,9 @@ import EmotionDetail from '@/views/historyData/emotionDetail.vue'
 import IntrusionDetection from '@/views/video/IntrusionDetection.vue'
 import FaceRecord from '@/views/video/faceRecord.vue'
 import IntrusionIndex from '@/views/historyData/intrusionIndex.vue'
+import Interaction from '@/views/video/Interaction.vue'
+import InteractionIndex from '@/views/historyData/interactionIndex.vue'
+import Fall from '@/views/video/fall.vue'
 
 export const constantRoutes = [
   {
@@ -80,10 +83,22 @@ export const constantRoutes = [
         meta: { title: '情绪监测', icon: 'el-icon-video-camera' }
       },
       {
+        path: 'fall',
+        name: 'fall',
+        component: Fall,
+        meta: { title: '摔倒监测', icon: 'el-icon-video-camera' }
+      },
+      {
         path: 'intrusionDetection',
         name: 'intrusionDetection',
         component: IntrusionDetection,
-        meta: { title: '入侵检测', icon: 'el-icon-video-camera' }
+        meta: { title: '入侵监测', icon: 'el-icon-video-camera' }
+      },
+      {
+        path: 'interaction',
+        name: 'interaction',
+        component: Interaction,
+        meta: { title: '交互检测', icon: 'el-icon-video-camera' }
       },
       {
         path: 'faceRecord',
@@ -166,24 +181,28 @@ export const asyncRoutes = [
       },
       {
         path: 'videoIndex',
-        name: 'historyData',
+        name: 'videoIndex',
         component: HistoryDataVideo,
         meta: { title: '摔倒记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       },
-
       {
         path: 'unknowIndex',
-        name: 'historyData',
+        name: 'unknowIndex',
         component: UnknowIndex,
-        meta: { title: '陌生人检测', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+        meta: { title: '陌生人记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       },
-
       {
         path: 'intrusionIndex',
-        name: 'historyData',
+        name: 'intrusionIndex',
         component: IntrusionIndex,
-        meta: { title: '入侵检测', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
-      }
+        meta: { title: '入侵记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+      },
+      {
+        path: 'interactionIndex',
+        name: 'interactionIndex',
+        component: InteractionIndex,
+        meta: { title: '交互记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+      },
     ]
   },
   { path: '*', redirect: '/404', hidden: true }

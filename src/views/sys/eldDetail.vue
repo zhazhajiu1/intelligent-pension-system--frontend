@@ -125,15 +125,16 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="年龄">
+                <!-- <el-form-item label="年龄">
                     <el-input v-model="editForm.Age" required></el-input>
-                </el-form-item>
+                </el-form-item> -->
 
                 <el-form-item label="生日">
                     <el-date-picker v-model="editForm.Birthday" type="date" placeholder="选择日期" format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd" required>
+                        value-format="yyyy-MM-dd" required @change="calculateAge">
                     </el-date-picker>
                 </el-form-item>
+
 
                 <el-form-item label="健康状态">
                     <el-select v-model="editForm.Healthy" placeholder="请选择">
@@ -254,6 +255,18 @@ export default {
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         },
 
+        calculateAge() {
+            if (!this.editForm.Birthday) return;
+            const birthDate = new Date(this.editForm.Birthday);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDifference = today.getMonth() - birthDate.getMonth();
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            this.editForm.Age = age;
+        },
+
         handleFileChange(file, fileList) {
             this.fileList = fileList;
             this.videoFile = file.raw;
@@ -354,6 +367,8 @@ export default {
         },
 
         handleSubmit() {
+            this.calculateAge(); // 提交前计算年龄
+
             this.editForm.ID = this.userInfo.ID;
 
             api.employeeUpdate(this.editForm).then(response => {
@@ -374,7 +389,7 @@ export default {
                 console.log(err);
                 this.$message.error('更新失败，请重试');
             });
-        }
+        },
     },
     mounted() {
         this.token = localStorage.getItem('token') || '';

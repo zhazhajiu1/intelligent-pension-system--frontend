@@ -73,6 +73,30 @@ export default {
     })
   },
 
+  getReactionList(data) {
+    return request({
+      url: '/video/reactionList',
+      method: 'get',
+      params: data
+    })
+  },
+
+  reactionDelete(id) {
+    return request({
+      url: `/video/reactionDelete`,
+      method: 'delete',
+      params: id
+    })
+  },
+
+  getReactionDetailByID(data) {
+    return request({
+      url: '/video/reactionDetailByID',
+      method: 'get',
+      params: data
+    })
+  },
+
 
 
 

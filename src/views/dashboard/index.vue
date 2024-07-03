@@ -78,7 +78,7 @@ export default {
         ],
       },
       healthStatusData: {
-        labels: ['健康', '良好', '一般', '疾病', '严重'],
+        labels: ['健康', '良好', '及格', '疾病', '严重'],
         datasets: [
           {
             label: '人数',
@@ -147,7 +147,7 @@ export default {
       userData.forEach(user => {
         if (user.health === '健康') healthStatusCounts[0]++;
         else if (user.health === '良好') healthStatusCounts[1]++;
-        else if (user.health === '一般') healthStatusCounts[2]++;
+        else if (user.health === '及格') healthStatusCounts[2]++;
         else if (user.health === '疾病') healthStatusCounts[3]++;
         else if (user.health === '严重') healthStatusCounts[4]++;
       });
