@@ -17,12 +17,11 @@
       </el-row>
     </el-card>
 
-    <el-divider></el-divider>
     <!-- 结果列表 -->
     <el-card>
       <el-table :data="pagedTableData" border style="width: 95%">
         <el-table-column fixed prop="id" label="序号" width="150"></el-table-column>
-        <el-table-column prop="Created" label="抓拍时间" width="300"></el-table-column>
+        <el-table-column prop="Created" label="抓拍时间" width="250"></el-table-column>
         <el-table-column prop="ImgUrl" label="图片" width="550"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">

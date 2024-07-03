@@ -18,7 +18,6 @@
       </el-row>
     </el-card>
 
-    <el-divider></el-divider>
     <!-- 结果列表 -->
     <el-card>
       <el-table :data="pagedTableData" border style="width: 95%">
