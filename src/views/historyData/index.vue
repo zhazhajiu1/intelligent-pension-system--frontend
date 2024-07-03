@@ -11,7 +11,7 @@
               value-format="yyyy-MM-dd" required>
             </el-date-picker>
 
-            <el-button type="primary" round icon="el-icon-search" @click="getStaff()">查询</el-button>
+            <el-button type="primary" round icon="el-icon-search" @click="getEmotions()">查询</el-button>
           </div>
         </el-col>
         <el-col :span="4"> </el-col>
@@ -77,7 +77,7 @@ export default {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
 
-    getStaff() {
+    getEmotions() {
       const params = {
         ...this.form,
       };
@@ -130,7 +130,7 @@ export default {
               type: 'success',
             });
 
-            this.getStaff(null);
+            this.getEmotions(null);
 
           } else {
             this.$message.error('删除失败，请重试');
@@ -168,7 +168,7 @@ export default {
     if (!this.token) {
       console.error('TOKEN is not found in localStorage');
     } else {
-      this.getStaff();
+      this.getEmotions();
     }
   },
 }

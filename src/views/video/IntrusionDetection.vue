@@ -10,7 +10,6 @@
   
             <div>处理后：</div>
             <div>
-              <!-- <img :src="videoSource4" :style="{ width: canvasWidth + 'px', height: canvasHeight + 'px' }"> -->
               <img :src="videoSource4" style="width: 100%; height: 100%">
             </div>
   

@@ -33,6 +33,14 @@ export default {
     })
   },
 
+  fallDelete(id) {
+    return request({
+      url: `/video/fallDelete`,
+      method: 'delete',
+      params: id
+    })
+  },
+
   getUnknow(data) {
     return request({
       url: '/video/unknowList',
@@ -49,13 +57,25 @@ export default {
     })
   },
 
-  fallDelete(id) {
+  getIntrusionList(data) {
     return request({
-      url: `/video/fallDelete`,
+      url: '/video/intrusionList',
+      method: 'get',
+      params: data
+    })
+  },
+
+  intrusionDelete(id) {
+    return request({
+      url: `/video/intrusionDelete`,
       method: 'delete',
       params: id
     })
   },
+
+
+
+
 
 }
 

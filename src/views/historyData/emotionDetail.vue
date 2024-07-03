@@ -9,10 +9,6 @@
 
                         <el-divider></el-divider>
                         <!-- 显示图片 -->
-                        <!-- <div v-if="userInfo.ElderlyUrl" >
-                            <img :src="userInfo.ElderlyUrl" alt="图片加载失败" style="max-width: 30%;">
-                        </div> -->
-
                         <div v-if="userInfo.Url">
                             <img :src="userInfo.Url" alt="图片加载失败" style="max-width: 30%;">
                             <img :src="userInfo.ElderlyUrl" alt="图片加载失败" style="max-width: 30%;">
@@ -124,14 +120,41 @@
 
         </el-card>
 
+        <el-card class="happiness-record-card" shadow="never">
+            <el-row>
+                <el-col :span="24">
+                    <h2>高兴记录</h2>
+                    <canvas id="happinessChart"></canvas>
+                </el-col>
+            </el-row>
+        </el-card>
+
     </div>
 </template>
 
 <script>
 import api from '@/api/historyData'
+import { Line } from 'chart.js'
+
 export default {
     data() {
         return {
+            happinessData: {
+                labels: [],
+                datasets: [
+                    {
+                        label: '高兴次数',
+                        backgroundColor: 'rgba(75,192,192,0.4)',
+                        borderColor: 'rgba(75,192,192,1)',
+                        data: []
+                    }
+                ]
+            },
+
+            form1: {
+                UserName: '',
+                Date: '',
+            },
 
             form: {
                 ID: '',
@@ -169,6 +192,8 @@ export default {
                 GuardianName: '',
                 GuardianPhone: '',
             },
+
+            emotionInfo: [],
             fileList: [],
             editDialogVisible: false,
             tableData: [],
@@ -191,7 +216,66 @@ export default {
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         },
 
-        getStaff() {
+        getEmotions() {
+            api.getList(this.form1).then(response => {
+                const res = response;
+                if (res.code === 20000) {
+                    this.$message({
+                        showClose: true,
+                        message: '获取成功！',
+                        type: 'success',
+                    });
+
+                    const userData = res.data.rows.map(record => ({
+                        name: record.UserName,
+                        health: record.Healthy,
+                        Created: record.Created,
+                    }));
+
+                    this.emotionInfo = userData;
+                    this.total = res.data.total; // 更新总记录数
+
+                    this.updateHappinessChart(); // 更新图表数据
+                } else {
+                    this.$message.error('获取失败，请重试');
+                }
+            }).catch(err => {
+                console.error(err);
+                this.$message.error('获取失败，请重试');
+            });
+        },
+
+        updateHappinessChart() {
+            const dateCountMap = {};
+
+            this.emotionInfo.forEach(record => {
+                const date = record.Created.split('T')[0]; // 只取日期部分
+                if (!dateCountMap[date]) {
+                    dateCountMap[date] = 0;
+                }
+                dateCountMap[date]++;
+            });
+
+            this.happinessData.labels = Object.keys(dateCountMap).sort(); // 日期排序
+            this.happinessData.datasets[0].data = this.happinessData.labels.map(date => dateCountMap[date]);
+
+            this.createHappinessChart();
+        },
+
+        createHappinessChart() {
+            new Line(document.getElementById('happinessChart'), {
+                data: this.happinessData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: '每日高兴次数'
+                    }
+                }
+            });
+        },
+
+        getElderly() {
             api.getOne(this.form).then(response => {
                 const res = response; // axios 返回的数据在 response 中
                 if (res.code === 20000) {
@@ -220,6 +304,10 @@ export default {
                         ElderlyUrl: record.ElderlyUrl,
                         ElderlyCreated: record.ElderlyCreated,
                     };
+
+                    this.form1.UserName = record.ElderlyName;
+                    this.getEmotions();
+
                 } else {
                     this.$message.error('获取失败，请重试');
                 }
@@ -229,45 +317,7 @@ export default {
             });
         },
 
-        updateStaff() {
-            this.editForm = { ...this.userInfo };
-            this.editDialogVisible = true;
-        },
 
-        onEditCancel() {
-            this.editDialogVisible = false;
-            this.editForm = {
-                UserName: '',
-                Phone: '',
-                Sex: '',
-                Age: '',
-                Password: '',
-                IsActive: '',
-            };
-        },
-
-        handleSubmit() {
-            this.editForm.ID = this.userInfo.ID;
-
-            api.employeeUpdate(this.editForm).then(response => {
-                const res = response; // axios 返回的数据在 response 中
-                if (res.code === 20000) {
-                    this.$message({
-                        showClose: true,
-                        message: '更新成功！',
-                        type: 'success',
-                    });
-
-                    this.editDialogVisible = false;
-                    this.getStaff();
-                } else {
-                    this.$message.error('更新失败，请重试');
-                }
-            }).catch(err => {
-                console.log(err);
-                this.$message.error('更新失败，请重试');
-            });
-        }
     },
     mounted() {
         this.token = localStorage.getItem('token') || '';
@@ -281,7 +331,7 @@ export default {
         if (!this.token) {
             console.error('TOKEN is not found in localStorage');
         } else {
-            this.getStaff();
+            this.getElderly();
         }
     },
 }
@@ -303,5 +353,25 @@ export default {
 
 .el-descriptions-item__content {
     padding: 0 10px;
+}
+
+#search {
+    margin-bottom: 20px;
+}
+
+.el-card {
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.happiness-record-card {
+    height: 500px;
+    /* 确保卡片有足够的高度 */
+}
+
+/* 设置图表容器的高度 */
+canvas#happinessChart {
+    width: 100% !important;
+    height: 100% !important;
 }
 </style>

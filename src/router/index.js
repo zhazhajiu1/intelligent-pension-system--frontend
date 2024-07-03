@@ -25,6 +25,7 @@ import UnknowIndex from '@/views/historyData/unknowIndex.vue'
 import EmotionDetail from '@/views/historyData/emotionDetail.vue'
 import IntrusionDetection from '@/views/video/IntrusionDetection.vue'
 import FaceRecord from '@/views/video/faceRecord.vue'
+import IntrusionIndex from '@/views/historyData/intrusionIndex.vue'
 
 export const constantRoutes = [
   {
@@ -169,11 +170,19 @@ export const asyncRoutes = [
         component: HistoryDataVideo,
         meta: { title: '摔倒记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       },
+
       {
         path: 'unknowIndex',
         name: 'historyData',
         component: UnknowIndex,
         meta: { title: '陌生人检测', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+      },
+
+      {
+        path: 'intrusionIndex',
+        name: 'historyData',
+        component: IntrusionIndex,
+        meta: { title: '入侵检测', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       }
     ]
   },
