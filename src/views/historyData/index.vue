@@ -49,6 +49,9 @@ import api from '@/api/historyData'
 export default {
   data() {
     return {
+      id_delete: {
+        ID: '',
+      },
       form: {
         UserName: '',
         Date: '',
