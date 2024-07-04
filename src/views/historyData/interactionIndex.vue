@@ -63,7 +63,7 @@
                     </template>
                     {{ userInfo.ElderlyID || '待填写' }}
                 </el-descriptions-item> -->
-
+                
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-date"></i>
@@ -79,7 +79,6 @@
                     </template>
                     <img :src="interactionInfo.Url" alt="交互记录" class="detail-image">
                 </el-descriptions-item>
-
 
                 <el-descriptions-item>
                     <template slot="label">
@@ -108,18 +107,20 @@
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-user"></i>
-                        义工电话
+                        健康状态
                     </template>
-                    {{ interactionInfo.VolunteerPhone || '待填写' }}
+                    {{ interactionInfo.Healthy || '待填写' }}
                 </el-descriptions-item>
 
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-user"></i>
-                        健康状态
+                        义工电话
                     </template>
-                    {{ interactionInfo.Healthy || '待填写' }}
+                    {{ interactionInfo.VolunteerPhone || '待填写' }}
                 </el-descriptions-item>
+
+
 
                 <!-- <el-descriptions-item>
                     <template slot="label">
@@ -205,11 +206,11 @@ export default {
             api.getReactionList(params).then(response => {
                 const res = response;
                 if (res.code === 20000) {
-                    this.$message({
-                        showClose: true,
-                        message: '获取成功！',
-                        type: 'success',
-                    });
+                    // this.$message({
+                    //     showClose: true,
+                    //     message: '获取成功！',
+                    //     type: 'success',
+                    // });
 
                     this.tableData = res.data.rows.map(record => ({
                         id: record.ID,
@@ -324,12 +325,6 @@ export default {
 </script>
 
 <style>
-/* 调整弹窗高度 */
-.el-dialog {
-    width: 90%;
-    height: 60%;
-}
-
 /* 给弹窗内的表格框添加线条 */
 .detailed-form .el-form-item {
     border-bottom: 1px solid #ebeef5;

@@ -86,11 +86,11 @@ export default {
       api.getList(params).then(response => {
         const res = response;
         if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '获取成功！',
-            type: 'success',
-          });
+          // this.$message({
+          //   showClose: true,
+          //   message: '获取成功！',
+          //   type: 'success',
+          // });
 
           this.tableData = res.data.rows.map(record => ({
             id: record.ID,

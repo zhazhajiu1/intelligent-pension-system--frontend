@@ -180,16 +180,16 @@ export const asyncRoutes = [
         hidden: true
       },
       {
-        path: 'videoIndex',
-        name: 'videoIndex',
-        component: HistoryDataVideo,
-        meta: { title: '摔倒记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
-      },
-      {
         path: 'unknowIndex',
         name: 'unknowIndex',
         component: UnknowIndex,
         meta: { title: '陌生人记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+      },
+      {
+        path: 'videoIndex',
+        name: 'videoIndex',
+        component: HistoryDataVideo,
+        meta: { title: '摔倒记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       },
       {
         path: 'intrusionIndex',

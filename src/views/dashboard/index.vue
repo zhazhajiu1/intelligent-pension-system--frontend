@@ -97,11 +97,11 @@ export default {
       api.getList(this.form).then(response => {
         const res = response;
         if (res.code === 20000) {
-          this.$message({
-            showClose: true,
-            message: '获取成功！',
-            type: 'success',
-          });
+          // this.$message({
+          //   showClose: true,
+          //   message: '获取成功！',
+          //   type: 'success',
+          // });
 
           const userData = res.data.rows.map(record => ({
             name: record.UserName,
