@@ -35,42 +35,109 @@
 
         <!-- 详情对话框 -->
         <el-dialog :visible.sync="viewDialogVisible" title="交互记录详情" width="800px" height="600px">
-            <el-form :model="interactionInfo" label-width="120px" class="detailed-form">
-                <el-form-item label="老人姓名">
-                    <span>{{ interactionInfo.ElderlyName }}</span>
-                </el-form-item>
-                <el-form-item label="义工姓名">
-                    <span>{{ interactionInfo.VolunteerName }}</span>
-                </el-form-item>
-                <el-form-item label="交互记录">
-                    <img :src="interactionInfo.Url" alt="交互记录" class="detail-image">
-                </el-form-item>
-                <el-form-item label="抓拍时间">
-                    <span>{{ interactionInfo.Created }}</span>
-                </el-form-item>
 
-                <!-- <el-form-item label="健康状态">
-                    <span>{{ interactionInfo.Healthy }}</span>
-                </el-form-item>
-                <el-form-item label="老人电话">
-                    <span>{{ interactionInfo.ElderlyPhone }}</span>
-                </el-form-item> -->
-                <el-form-item label="老人照片">
+
+            <el-descriptions class="margin-top" title="详情信息" :column="2" border>
+                <template slot="extra">
+                </template>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        老人
+                    </template>
+                    {{ interactionInfo.ElderlyName || '待填写' }}
+                </el-descriptions-item>
+
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        义工
+                    </template>
+                    {{ interactionInfo.VolunteerName || '待填写' }}
+                </el-descriptions-item>
+
+                <!-- <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-date"></i>
+                        图片编号
+                    </template>
+                    {{ userInfo.ElderlyID || '待填写' }}
+                </el-descriptions-item> -->
+
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-date"></i>
+                        抓拍时间
+                    </template>
+                    {{ formatDate(interactionInfo.Created) || '待填写' }}
+                </el-descriptions-item>
+
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-date"></i>
+                        交互记录
+                    </template>
+                    <img :src="interactionInfo.Url" alt="交互记录" class="detail-image">
+                </el-descriptions-item>
+
+
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        老人照片
+                    </template>
                     <img :src="interactionInfo.ElderlyUrl" alt="老人照片" class="detail-image">
-                </el-form-item>
-                <el-form-item label="义工照片">
+                </el-descriptions-item>
+
+                <!-- <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-mobile-phone"></i>
+                        老人电话
+                    </template>
+                    {{ userInfo.Phone || '待填写' }}
+                </el-descriptions-item> -->
+                
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        义工照片
+                    </template>
                     <img :src="interactionInfo.VolunteerUrl" alt="义工照片" class="detail-image">
-                </el-form-item>
-                <el-form-item label="义工电话">
-                    <span>{{ interactionInfo.VolunteerPhone }}</span>
-                </el-form-item>
-                <!-- <el-form-item label="监护人姓名">
-                    <span>{{ interactionInfo.GuardianName }}</span>
-                </el-form-item> -->
-                <!-- <el-form-item label="监护人电话">
-                    <span>{{ interactionInfo.GuardianPhone }}</span>
-                </el-form-item> -->
-            </el-form>
+                </el-descriptions-item>
+
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        义工电话
+                    </template>
+                    {{ interactionInfo.VolunteerPhone || '待填写' }}
+                </el-descriptions-item>
+
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        健康状态
+                    </template>
+                    {{ interactionInfo.Healthy || '待填写' }}
+                </el-descriptions-item>
+
+                <!-- <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-date"></i>
+                        创建时间
+                    </template>
+                    {{ formatDate(userInfo.ElderlyCreated) || '待填写' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-refresh"></i>
+                        更新时间
+                    </template>
+                    {{ formatDate(userInfo.Updated) || '待填写' }}
+                </el-descriptions-item> -->
+
+            </el-descriptions>
+            
         </el-dialog>
 
         <!-- 分页组件 -->
@@ -259,7 +326,8 @@ export default {
 <style>
 /* 调整弹窗高度 */
 .el-dialog {
-    height: 800px;
+    width: 90%;
+    height: 60%;
 }
 
 /* 给弹窗内的表格框添加线条 */
