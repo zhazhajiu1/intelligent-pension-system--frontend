@@ -267,9 +267,18 @@ export default {
                 data: this.happinessData,
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     title: {
                         display: true,
                         text: '每日高兴次数'
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        }
                     }
                 }
             });
@@ -337,7 +346,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #search .el-input {
     width: 200px;
     margin-right: 10px;
@@ -365,13 +374,19 @@ export default {
 }
 
 .happiness-record-card {
-    height: 500px;
+    height: 300px;
     /* 确保卡片有足够的高度 */
 }
 
 /* 设置图表容器的高度 */
 canvas#happinessChart {
     width: 100% !important;
-    height: 100% !important;
+    height: 90px !important;
+    /* 设置图表高度 */
 }
+
+.hidden {
+  display: none;
+}
+
 </style>

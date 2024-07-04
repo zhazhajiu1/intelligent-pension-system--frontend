@@ -230,7 +230,7 @@ img {
 canvas {
   position: absolute;
   z-index: 1;
-  border: 1px solid red; /* 为了更好地调试，添加边框 */
+  border: 1px solid rgb(0, 128, 255); /* 为了更好地调试，添加边框 */
 }
 
 .hidden {
