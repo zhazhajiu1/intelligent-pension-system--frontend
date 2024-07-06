@@ -25,6 +25,7 @@ import UnknowIndex from '@/views/historyData/unknowIndex.vue'
 import EmotionDetail from '@/views/historyData/emotionDetail.vue'
 import IntrusionDetection from '@/views/video/IntrusionDetection.vue'
 import FaceRecord from '@/views/video/faceRecord.vue'
+import aiChat from '@/views/video/aiChat.vue'
 import IntrusionIndex from '@/views/historyData/intrusionIndex.vue'
 
 export const constantRoutes = [
@@ -90,6 +91,13 @@ export const constantRoutes = [
         name: 'faceRecord',
         component: FaceRecord,
         meta: { title: '人脸录入', icon: 'el-icon-video-camera' }
+      },
+      {
+        path: 'aiChat',
+        name: 'aiChat',
+        component: aiChat,
+        meta: { title: '语音聊天机器人', icon: 'el-icon-s-comment' }
+        // meta: { title: '语音聊天机器人', icon: 'el-icon-service' }
       },
     ]
   }

@@ -1,0 +1,227 @@
+<template>
+    <div class="video">
+        <div class="chat-container">
+            <div class="messages">
+                <div v-for="(message, index) in messages" :key="index" :class="['message', message.role]">
+                    <!-- 机器人回答 -->
+                    <div v-if="message.role === 'assistant'" class="assistant-message">
+                        <img src="https://www.logosc.cn//oss/icons/2023/03/28/cb468535203d42e509bc58de004f46cb.svg"
+                            class="chat-icon" />
+                        <div class="message-content">
+                            <p>{{ message.content }}</p>
+                            <el-button type="text" icon="el-icon-document-copy"
+                                @click="copyText(message.content)">复制</el-button>
+                        </div>
+                    </div>
+                    <!-- 用户提问 -->
+                    <div v-else class="user-message">
+                        <div class="message-content">
+                            <p>{{ message.content }}</p>
+                            <el-button type="text" icon="el-icon-document-copy"
+                                @click="copyText(message.content)">复制</el-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-container">
+                <input v-model="userInput" @keyup.enter="sendMessage" placeholder="发送消息..." />
+                <el-button type="primary" icon="el-icon-position" @click="sendMessage()">发送</el-button>
+                <el-button type="primary" icon="el-icon-microphone" @mousedown="startVoiceRecognition()" @mouseup="stopVoiceRecognition()"></el-button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import api from '@/api/video';
+import axios from 'axios';
+
+export default {
+    data() {
+        return {
+            userInput: '',
+            messages: [
+                { role: 'assistant', content: '你好，请问有什么可以帮您的吗？' }
+            ],
+            recognition: null,
+            isRecognizing: false,
+            voices: [],
+        };
+    },
+    created() {
+        this.speak(this.messages[0].content);
+
+        if ('webkitSpeechRecognition' in window) {
+            this.recognition = new webkitSpeechRecognition();
+            this.recognition.lang = 'zh-CN';
+            // 设置语音识别为非连续模式，即只识别一次
+            this.recognition.continuous = false;
+            // 不返回临时结果，只返回最终结果
+            this.recognition.interimResults = false;
+
+            this.recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                this.userInput = transcript;
+                this.speak(`识别成功：${transcript}`);
+                this.sendMessage();
+            };
+
+            this.recognition.onerror = (event) => {
+                this.speak('语音识别失败');
+                console.error('语音识别失败', event);
+            };
+
+            this.recognition.onend = () => {
+                this.isRecognizing = false;
+            };
+        } else {
+            console.warn('当前浏览器不支持语音识别');
+        }
+
+        window.speechSynthesis.onvoiceschanged = () => {
+            this.voices = window.speechSynthesis.getVoices();
+        };
+    },
+    methods: {
+        sendMessage() {
+            if (this.userInput.trim() === '') return;
+
+            this.messages.push({ role: 'user', content: this.userInput });
+
+            const userMessage = this.userInput;
+            this.userInput = ''; // 清空输入框
+            this.speak(userMessage);
+
+            axios.post('http://localhost:5000/chat', { content: userMessage })
+                .then(response => {
+                    const reply = response.data;
+                    this.messages.push({ role: 'assistant', content: reply });
+                    // this.speak(reply);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+            this.userInput = '';
+        },
+        copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.$message({
+                    message: '复制成功',
+                    type: 'success'
+                });
+            }).catch(err => {
+                this.$message({
+                    message: '复制失败',
+                    type: 'error'
+                });
+                console.error('Error:', err);
+            });
+        },
+        speak(text) {
+            if ('speechSynthesis' in window) {
+                this.voices = window.speechSynthesis.getVoices();
+                const utterance = new SpeechSynthesisUtterance(text);
+                // 1吐字最清晰,5,6
+                utterance.voice = this.voices[1]; 
+                utterance.lang = 'zh-CN';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn('当前浏览器不支持语音合成');
+            }
+        },
+        startVoiceRecognition() {
+            this.speak("您说,我在听");
+            if (this.recognition && !this.isRecognizing) {
+                this.recognition.start();
+                this.isRecognizing = true;
+            }
+        },
+        stopVoiceRecognition() {
+            if (this.recognition && this.isRecognizing) {
+                this.recognition.stop();
+                this.isRecognizing = false;
+            }
+        }
+    }
+};
+</script>
+
+<style>
+.chat-container {
+    height: 88vh;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.message {
+    margin: 10px 0;
+    display: flex;
+}
+
+.assistant-message {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.user-message {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row-reverse;
+}
+
+.chat-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 5px 15px;
+    margin-top: 5px;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    display: inline-block;
+    background-color: #f0f0f0;
+}
+
+.message.user .message-content {
+    background-color: #d4edda;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.message.assistant .message-content {
+    background-color: #f0f0f0;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.input-container {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+</style>
