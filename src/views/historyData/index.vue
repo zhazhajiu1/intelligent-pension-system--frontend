@@ -28,7 +28,8 @@
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
             <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
+            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;"
+            :disabled="role !== '0'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,6 +63,7 @@ export default {
       pageSize: 5,
       total: 0,
       token: '',
+      role: '',
     }
   },
 
@@ -166,6 +168,9 @@ export default {
 
   mounted() {
     this.token = localStorage.getItem('token') || '';
+    this.role = localStorage.getItem('roles') || '';
+    console.log('role:', this.role);
+    
     if (!this.token) {
       console.error('TOKEN is not found in localStorage');
     } else {

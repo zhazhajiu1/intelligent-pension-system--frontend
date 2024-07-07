@@ -10,7 +10,8 @@
             <el-input v-model="form.Phone" placeholder="请输入电话号码"></el-input>
 
             <el-button type="primary" round icon="el-icon-search" @click="getStaff()">查询</el-button>
-            <el-button type="primary" round icon="el-icon-search" @click="addStaff()">新增</el-button>
+            <el-button type="primary" round icon="el-icon-search" @click="addStaff()"
+            :disabled="role !== '0'">新增</el-button>
 
           </div>
         </el-col>
@@ -29,7 +30,8 @@
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
             <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
+            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;"
+            :disabled="role !== '0'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -115,6 +117,7 @@ export default {
       sex: '',
       age: '',
       token: '',
+      role: '',
       pagedTableData: [],
       tableData: [],
       pageSize: 10,
@@ -314,6 +317,9 @@ export default {
   mounted() {
     this.token = localStorage.getItem('token') || '';
     console.log('Retrieved token:', this.token);
+
+    this.role = localStorage.getItem('roles') || '';
+    console.log('role:', this.role);
 
     if (!this.token) {
       console.error('TOKEN is not found in localStorage');

@@ -21,7 +21,8 @@
         <el-card>
             <el-descriptions class="margin-top" title="详情信息" :column="3" border>
                 <template slot="extra">
-                    <el-button type="primary" size="small" @click="updateStaff()">操作</el-button>
+                    <el-button type="primary" size="small" @click="updateStaff()"
+                    :disabled="role !== '0'">操作</el-button>
                 </template>
                 <el-descriptions-item>
                     <template slot="label">
@@ -104,8 +105,6 @@
             </el-descriptions>
 
             <br><br>
-
-            <!-- <el-button type="primary" round icon="el-icon-edit" @click="updateStaff()">修改信息</el-button> -->
         </el-card>
 
         <el-dialog :visible.sync="editDialogVisible" title="编辑信息">
@@ -237,6 +236,7 @@ export default {
             editDialogVisible: false,
             tableData: [],
             token: '',
+            role: '',
             pageSize: 5,
             currentPage: 1,
             total: 0,
@@ -394,6 +394,9 @@ export default {
     mounted() {
         this.token = localStorage.getItem('token') || '';
         console.log('Retrieved token:', this.token);
+
+        this.role = localStorage.getItem('roles') || '';
+        console.log('role:', this.role);
 
         this.form.ID = this.$route.params.id;
         console.log("ID", this.$route.params.id);

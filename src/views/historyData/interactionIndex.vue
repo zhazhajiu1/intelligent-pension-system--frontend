@@ -27,7 +27,8 @@
                     <template slot-scope="scope">
                         <el-button @click="getDetail(scope.row.id)" type="text" size="small">查看</el-button>
                         <el-button @click="deleteStaff(scope.row.id)" type="text" size="small"
-                            style="color: red;">删除</el-button>
+                            style="color: red;"
+                            :disabled="role !== '0'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -87,14 +88,6 @@
                     </template>
                     <img :src="interactionInfo.ElderlyUrl" alt="老人照片" class="detail-image">
                 </el-descriptions-item>
-
-                <!-- <el-descriptions-item>
-                    <template slot="label">
-                        <i class="el-icon-mobile-phone"></i>
-                        老人电话
-                    </template>
-                    {{ userInfo.Phone || '待填写' }}
-                </el-descriptions-item> -->
                 
                 <el-descriptions-item>
                     <template slot="label">
@@ -182,6 +175,7 @@ export default {
             currentPage: 1,
             total: 0,
             viewDialogVisible: false,
+            role: '',
         }
     },
 
@@ -315,6 +309,9 @@ export default {
 
     mounted() {
         this.token = localStorage.getItem('token') || '';
+        this.role = localStorage.getItem('roles') || '';
+        console.log('role:', this.role);
+        
         if (!this.token) {
             console.error('TOKEN is not found in localStorage');
         } else {

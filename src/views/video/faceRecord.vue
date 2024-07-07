@@ -10,6 +10,10 @@
 
           <el-divider></el-divider>
           <el-card class="box-card">
+
+            <el-input v-model="this.form.UserName" placeholder="请输入姓名" />
+            <br><br>
+
             <el-button @click="getSRC">开始录入</el-button>
             <el-button @click="stopSRC">停止结束</el-button>
           </el-card>
@@ -30,7 +34,7 @@ export default {
   data() {
     return {
       form: {
-        UserName: 'qjx',
+        UserName: '',
       },
       videoSource: '',
       videoSource_local: '',

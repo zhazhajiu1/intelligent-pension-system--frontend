@@ -21,7 +21,8 @@
         <el-card>
             <el-descriptions class="margin-top" title="详情信息" :column="3" border>
                 <template slot="extra">
-                    <el-button type="primary" size="small" @click="updateStaff()">操作</el-button>
+                    <el-button type="primary" size="small" @click="updateStaff()"
+                    :disabled="role !== '0'">操作</el-button>
                 </template>
                 <el-descriptions-item>
                     <template slot="label">
@@ -103,8 +104,7 @@
                 </el-form-item>
                 <el-form-item label="性别">
                     <el-select v-model="editForm.Sex" placeholder="请选择">
-                        <el-option v-for="item in sexOptions" :key="item.value" :label="item.label"
-                            :value="item.value">
+                        <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -117,7 +117,7 @@
                 <el-form-item label="是否启用">
                     <el-switch v-model="editForm.IsActive" active-value="0" inactive-value="1" active-color="#13ce66"
                         inactive-color="#ff4949">
-                    </el-switch> 
+                    </el-switch>
                 </el-form-item>
 
                 <el-form-item label="上传图片">
@@ -166,7 +166,7 @@ export default {
                 ImgUrl: '',
             },
             userInfo: {
-                Url:'',
+                Url: '',
                 ID: '',
                 UserName: '',
                 Phone: '',
@@ -182,6 +182,7 @@ export default {
             editDialogVisible: false,
             tableData: [],
             token: '',
+            role: '',
             pageSize: 5,
             currentPage: 1,
             total: 0,
@@ -317,6 +318,9 @@ export default {
     mounted() {
         this.token = localStorage.getItem('token') || '';
         console.log('Retrieved token:', this.token);
+
+        this.role = localStorage.getItem('roles') || '';
+        console.log('role:', this.role);
 
         this.form.ID = this.$route.params.id;
         console.log("ID", this.$route.params.id);

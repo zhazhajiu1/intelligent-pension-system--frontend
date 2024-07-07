@@ -26,7 +26,8 @@
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
             <el-button @click="viewDetail(scope.row.ImgUrl)" type="text" size="small">查看</el-button>
-            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;">删除</el-button>
+            <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;"
+            :disabled="role !== '0'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,6 +80,7 @@ export default {
       viewDialogVisible: false,  // 控制图片对话框的显示
       currentVideoUrl: '',  // 当前播放的图片URL
       videoSource: '',
+      role: '',
     }
   },
 
@@ -188,6 +190,9 @@ export default {
   mounted() {
     this.token = localStorage.getItem('token') || '';
     console.log('Retrieved token:', this.token);
+
+    this.role = localStorage.getItem('roles') || '';
+    console.log('role:', this.role);
 
     if (!this.token) {
       console.error('TOKEN is not found in localStorage');
