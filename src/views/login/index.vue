@@ -126,9 +126,9 @@ export default {
               });
 
               localStorage.setItem('token', res.data.token);
-              localStorage.setItem('role', this.loginForm.userrole);
+              localStorage.setItem('roles', this.loginForm.userrole);
               console.log("token", res.data.token);
-              console.log("role", this.loginForm.userrole);
+              console.log("roles", this.loginForm.userrole);
 
               // 设置 loading 状态为 true
               this.loading = true;

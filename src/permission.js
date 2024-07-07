@@ -25,7 +25,7 @@ router.beforeEach(async (to, from, next) => {
     NProgress.done()
   } else {
     if (token) {
-      const role = localStorage.getItem('role')
+      const role = localStorage.getItem('roles')
 
       if (to.path === '/login') {
         // 如果已经登录，重定向到首页

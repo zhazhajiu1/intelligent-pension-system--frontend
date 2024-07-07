@@ -118,7 +118,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/sys/user',
     name: 'sysManage',
-    meta: { title: '系统管理', icon: 'example', roles: ['0'] },
+    meta: { title: '系统管理', icon: 'example', roles: ['0', '1', '2']},
     children: [
       {
         path: 'user',
@@ -204,9 +204,11 @@ export const asyncRoutes = [
         name: 'interactionIndex',
         component: InteractionIndex,
         meta: { title: '交互记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
-      },
+      }
     ]
   },
+  // 其他路由
+
   {
     path: '/faceRecord',
     component: Layout,
