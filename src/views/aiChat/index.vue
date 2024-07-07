@@ -24,12 +24,12 @@
                 </div>
             </div>
             <div class="input-container">
-                <select v-model="value">
-                    <option v-for="option in options" :key="option.value" :value="option.value">
+                <el-select v-model="value" placeholder="请选择">
+                    <el-option v-for="option in options" :key="option.value" :value="option.value">
                         {{ option.label }}
-                    </option>
-                </select>
-                <input v-model="userInput" @keyup.enter="sendMessage" placeholder="发送消息..." />
+                    </el-option>
+                </el-select>
+                <el-input v-model="userInput" @keyup.enter="sendMessage" placeholder="发送消息..." />
                 <el-button type="primary" icon="el-icon-position" @click="sendMessage()">发送</el-button>
                 <el-button type="primary" icon="el-icon-microphone" @click="audioChangeWord()"><span
                         v-if="isListening">语音识别中...</span><span v-else></span>
@@ -49,10 +49,10 @@ export default {
     data() {
         return {
             options: [
-                { value: 1, label: '普通话男声' },
-                { value: 2, label: '普通话女声' },
-                { value: 4, label: '粤语男声' },
-                { value: 5, label: '粤语女声' }
+                { value: '普通话男声', label: '普通话男声' },
+                { value: '普通话女声', label: '普通话女声' },
+                { value: '粤语男声', label: '粤语男声' },
+                { value: '粤语女声', label: '粤语女声' }
             ],
             value: '',
             word: "",
@@ -71,7 +71,7 @@ export default {
         };
     },
     created() {
-        this.speak(this.messages[0].content);
+        // this.speak(this.messages[0].content);
 
         if ('webkitSpeechRecognition' in window) {
             this.recognition = new webkitSpeechRecognition();
@@ -198,30 +198,31 @@ export default {
 
                 let voiceIndex;
                 switch (this.value) {
-                    case 1:
-                        voiceIndex = 0; // 假设普通话男声的索引是0
+                    case '普通话男声':
+                        voiceIndex = 7; 
                         break;
-                    case 2:
-                        voiceIndex = 1; // 假设普通话女声的索引是1
+                    case '普通话女声':
+                        voiceIndex = 2; 
                         break;
-                    case 4:
-                        voiceIndex = 2; // 假设粤语男声的索引是2
+                    case '粤语男声':
+                        voiceIndex = 3; 
                         break;
-                    case 5:
-                        voiceIndex = 3; // 假设粤语女声的索引是3
+                    case '粤语女声':
+                        voiceIndex = 4; 
                         break;
                     default:
-                        voiceIndex = 0; // 默认选择普通话男声
+                        voiceIndex = 0; // 默认
                 }
 
                 utterance.voice = voices[voiceIndex];
                 utterance.lang = 'zh-CN';
                 window.speechSynthesis.speak(utterance);
-                this.speak(this.messages[0].content);
 
             } else {
                 console.warn('当前浏览器不支持语音合成');
             }
+            // this.speak(this.messages[0].content);
+
         },
 
         startVoiceRecognition() {
