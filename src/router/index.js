@@ -101,12 +101,6 @@ export const constantRoutes = [
         component: Interaction,
         meta: { title: '交互检测', icon: 'el-icon-video-camera' }
       },
-      {
-        path: 'faceRecord',
-        name: 'faceRecord',
-        component: FaceRecord,
-        meta: { title: '人脸录入', icon: 'el-icon-video-camera' }
-      },
     ]
   }
 ]
@@ -207,6 +201,18 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/faceRecord',
+    component: Layout,
+    redirect: '/faceRecord',
+    children: [{
+      path: 'index',
+      name: 'aiChat',
+      component: FaceRecord,
+      meta: { title: '人脸录入', icon: 'el-icon-video-camera' }
+      // hidden: true
+    }]
+  },
+  {
     path: '/aiChat',
     component: Layout,
     redirect: '/aiChat',
@@ -214,10 +220,11 @@ export const asyncRoutes = [
       path: 'index',
       name: 'aiChat',
       component: AIChat,
-      meta: { title: 'AI聊天', icon: 'user' },
+      meta: { title: 'AI养老助手', icon: 'user' },
       // hidden: true
     }]
   },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 
