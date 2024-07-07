@@ -29,6 +29,7 @@ import IntrusionIndex from '@/views/historyData/intrusionIndex.vue'
 import Interaction from '@/views/video/Interaction.vue'
 import InteractionIndex from '@/views/historyData/interactionIndex.vue'
 import Fall from '@/views/video/fall.vue'
+import AIChat from '@/views/aiChat/index.vue'
 
 export const constantRoutes = [
   {
@@ -204,6 +205,18 @@ export const asyncRoutes = [
         meta: { title: '交互记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
       },
     ]
+  },
+  {
+    path: '/aiChat',
+    component: Layout,
+    redirect: '/aiChat',
+    children: [{
+      path: 'index',
+      name: 'aiChat',
+      component: AIChat,
+      meta: { title: 'AI聊天', icon: 'user' },
+      // hidden: true
+    }]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -40,10 +40,15 @@ export default {
       method: 'post',
       data: data
     })
+  },
+
+  aiChat(data) {
+    return request({
+      url: '/user/chat',
+      method: 'post',
+      data: data
+    })
   }
-
-  
-
   
 }
 
