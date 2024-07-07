@@ -19,8 +19,10 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes
       if (roles.includes('0')) {
+        // 管理员角色，可以访问所有动态路由
         accessedRoutes = asyncRoutes || []
       } else {
+        // 其他角色根据角色过滤路由
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
       commit('SET_ROUTES', accessedRoutes)
@@ -36,9 +38,24 @@ function filterAsyncRoutes(routes, roles) {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
       if (tmp.children) {
+        // 过滤子路由
         tmp.children = filterAsyncRoutes(tmp.children, roles)
       }
-      res.push(tmp)
+      // 根据角色过滤路由
+      if (roles.includes('2')) {
+        // 如果是义工角色，排除义工管理页面
+        if (tmp.path !== '/sys/data') {
+          res.push(tmp)
+        }
+      } else if (roles.includes('1')) {
+        // 如果是员工角色，排除员工管理页面
+        if (tmp.path !== '/sys/videoData') {
+          res.push(tmp)
+        }
+      } else {
+        // 管理员角色或其他角色，添加所有路由
+        res.push(tmp)
+      }
     }
   })
 
