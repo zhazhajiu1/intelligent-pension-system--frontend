@@ -71,7 +71,7 @@ export default {
         };
     },
     created() {
-        // this.speak(this.messages[0].content);
+        this.speak(this.messages[0].content);
 
         if ('webkitSpeechRecognition' in window) {
             this.recognition = new webkitSpeechRecognition();
@@ -155,11 +155,11 @@ export default {
             api.aiChat(this.Question).then(response => {
                 const res = response;
                 if (res.code === 20000) {
-                    this.$message({
-                        showClose: true,
-                        message: '发送成功！',
-                        type: 'success',
-                    });
+                    // this.$message({
+                    //     showClose: true,
+                    //     message: '发送成功！',
+                    //     type: 'success',
+                    // });
 
                     const reply = res.data.Answer;
                     this.messages.push({ role: 'assistant', content: reply });
