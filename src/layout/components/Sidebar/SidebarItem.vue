@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     roles() {
-      return JSON.parse(localStorage.getItem('roles')) || []
+      return [localStorage.getItem('roles')]
     }
   },
   methods: {

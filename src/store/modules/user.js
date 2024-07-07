@@ -2,30 +2,19 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
-const getDefaultState = () => {
-  return {
-    token: getToken(),
-    name: '',
-    id: null,
-    avatar: '',
-    roles: []
-  }
+const state = {
+  token: getToken(),
+  name: '',
+  avatar: '',
+  roles: []
 }
 
-const state = getDefaultState()
-
 const mutations = {
-  RESET_STATE: (state) => {
-    Object.assign(state, getDefaultState())
-  },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
   SET_NAME: (state, name) => {
     state.name = name
-  },
-  SET_ID: (state, id) => {
-    state.id = id
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -38,14 +27,12 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password, userrole } = userInfo
+    const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ UserName: username.trim(), Password: password, UserRole: userrole }).then(response => {
+      login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        // commit('SET_TOKEN', data.token)
-        // setToken(data.token)
-        localStorage.setItem('token', data.token);
-        console.log("token", data.token);
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -63,21 +50,18 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        if (data.roles && data.roles.length > 0) {
-          commit('SET_ROLES', data.roles)
-        } else {
-          reject('getInfo: roles must be a not-null array')
+        const { roles, name, avatar } = data
+
+        // roles must be a non-empty array
+        if (!roles || roles.length <= 0) {
+          reject('getInfo: roles must be a non-null array!')
         }
 
-        const { name, avatar, id } = data
-
-        commit('SET_ID', id)
-        console.log('id号' + id)
+        commit('SET_ROLES', roles)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
-        console.log(error)
         reject(error)
       })
     })
@@ -87,9 +71,10 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        removeToken() // must remove  token  first
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        removeToken()
         resetRouter()
-        commit('RESET_STATE')
         resolve()
       }).catch(error => {
         reject(error)
@@ -100,8 +85,29 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken() // must remove  token  first
-      commit('RESET_STATE')
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      removeToken()
+      resolve()
+    })
+  },
+
+  // dynamically modify permissions
+  changeRoles({ commit, dispatch }, role) {
+    return new Promise(async resolve => {
+      const token = role + '-token'
+
+      commit('SET_TOKEN', token)
+      setToken(token)
+
+      const { roles } = await dispatch('getInfo')
+
+      resetRouter()
+
+      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
+
+      router.addRoutes(accessRoutes)
+
       resolve()
     })
   }
@@ -113,4 +119,3 @@ export default {
   mutations,
   actions
 }
-

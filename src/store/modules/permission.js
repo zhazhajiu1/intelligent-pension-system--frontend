@@ -47,7 +47,6 @@ function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
   } else {
-    // 没有设置 roles 的路由默认所有角色可见
     return true
   }
 }

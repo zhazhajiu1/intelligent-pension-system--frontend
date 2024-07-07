@@ -1,12 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-Vue.use(Router)
-
-/* Layout */
 import Layout from '@/layout'
-
-/* Pages */
 import Register from '@/views/register/index'
 import Login from '@/views/login/index'
 import NotFound from '@/views/404'
@@ -31,6 +25,8 @@ import InteractionIndex from '@/views/historyData/interactionIndex.vue'
 import Fall from '@/views/video/fall.vue'
 import AIChat from '@/views/aiChat/index.vue'
 
+Vue.use(Router)
+
 export const constantRoutes = [
   {
     path: '/register',
@@ -45,7 +41,7 @@ export const constantRoutes = [
   },
   {
     path: '/',
-    redirect: '/login', // 默认重定向到登录页面
+    redirect: '/login',
     hidden: true
   },
   {
@@ -107,7 +103,7 @@ export const constantRoutes = [
         name: 'interaction',
         component: Interaction,
         meta: { title: '交互检测', icon: 'el-icon-video-camera' }
-      },
+      }
     ]
   }
 ]
@@ -118,7 +114,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/sys/user',
     name: 'sysManage',
-    meta: { title: '系统管理', icon: 'example', roles: ['0', '1', '2']},
+    meta: { title: '系统管理', icon: 'example', roles: ['0', '1', '2'] },
     children: [
       {
         path: 'user',
@@ -166,49 +162,47 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/historyData/index',
     name: 'historyData',
-    meta: { title: '历史数据', icon: 'el-icon-s-data', roles: ['0', '1', '2'] },
+    meta: { title: '历史数据', icon: 'el-icon-s-data' },
     children: [
       {
         path: 'index',
         name: 'historyData',
         component: HistoryDataPhoto,
-        meta: { title: '情绪记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+        meta: { title: '情绪记录', icon: 'el-icon-s-data' }
       },
       {
         path: 'emotionDetail/:id',
         name: 'emotionDetail',
         component: EmotionDetail,
-        meta: { title: '情绪记录详情', icon: 'el-icon-s-data', roles: ['0', '1', '2'] },
+        meta: { title: '情绪记录详情', icon: 'el-icon-s-data' },
         hidden: true
       },
       {
         path: 'unknowIndex',
         name: 'unknowIndex',
         component: UnknowIndex,
-        meta: { title: '陌生人记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+        meta: { title: '陌生人记录', icon: 'el-icon-s-data' }
       },
       {
         path: 'videoIndex',
         name: 'videoIndex',
         component: HistoryDataVideo,
-        meta: { title: '摔倒记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+        meta: { title: '摔倒记录', icon: 'el-icon-s-data' }
       },
       {
         path: 'intrusionIndex',
         name: 'intrusionIndex',
         component: IntrusionIndex,
-        meta: { title: '入侵记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+        meta: { title: '入侵记录', icon: 'el-icon-s-data' }
       },
       {
         path: 'interactionIndex',
         name: 'interactionIndex',
         component: InteractionIndex,
-        meta: { title: '交互记录', icon: 'el-icon-s-data', roles: ['0', '1', '2'] }
+        meta: { title: '交互记录', icon: 'el-icon-s-data' }
       }
     ]
   },
-  // 其他路由
-
   {
     path: '/faceRecord',
     component: Layout,
@@ -218,7 +212,6 @@ export const asyncRoutes = [
       name: 'aiChat',
       component: FaceRecord,
       meta: { title: '人脸录入', icon: 'el-icon-video-camera' }
-      // hidden: true
     }]
   },
   {
@@ -229,25 +222,22 @@ export const asyncRoutes = [
       path: 'index',
       name: 'aiChat',
       component: AIChat,
-      meta: { title: 'AI养老助手', icon: 'user' },
-      // hidden: true
+      meta: { title: 'AI养老助手', icon: 'user' }
     }]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes.concat(asyncRoutes) // 确保所有路由都被加载
+  routes: constantRoutes.concat(asyncRoutes)
 })
 
 const router = createRouter()
 
 export function resetRouter() {
   const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  router.matcher = newRouter.matcher
 }
 
 export default router
