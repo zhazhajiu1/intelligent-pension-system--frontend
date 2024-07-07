@@ -35,9 +35,18 @@ router.beforeEach(async (to, from, next) => {
         if (role === '0') {
           // 管理员，放行全部路由
           next()
-        } else if (role === '1' || role === '2') {
-          // 员工和义工，限制系统管理中的权限
+        } else if (role === '2') {
+          // 员工，限制系统管理中的权限
           if (to.path.startsWith('/sys/data') || to.path.startsWith('/sys/videoData')) {
+            Message.error('您没有权限访问该页面')
+            next(from.path)
+            NProgress.done()
+          } else {
+            next()
+          }
+        } else if (role === '1') {
+          // 义工，限制员工管理，但可以看到义工管理
+          if (to.path.startsWith('/sys/videoData')) {
             Message.error('您没有权限访问该页面')
             next(from.path)
             NProgress.done()

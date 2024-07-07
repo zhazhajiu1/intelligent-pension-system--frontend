@@ -136,13 +136,13 @@ export const asyncRoutes = [
         path: 'data',
         name: 'data',
         component: DataManage,
-        meta: { title: '义工管理', icon: 'el-icon-s-data', roles: ['0'] }
+        meta: { title: '义工管理', icon: 'el-icon-s-data', roles: ['0', '1'] }
       },
       {
         path: 'volunteerDetail/:id',
         name: 'volunteerDetail',
         component: VolunteerDetail,
-        meta: { title: '义工详情', icon: 'el-icon-s-data', roles: ['0'] },
+        meta: { title: '义工详情', icon: 'el-icon-s-data', roles: ['0', '1'] },
         hidden: true
       },
       {
