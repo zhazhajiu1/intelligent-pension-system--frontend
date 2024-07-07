@@ -26,10 +26,28 @@
             <div class="input-container">
                 <input v-model="userInput" @keyup.enter="sendMessage" placeholder="发送消息..." />
                 <el-button type="primary" icon="el-icon-position" @click="sendMessage()">发送</el-button>
-                <el-button type="primary" icon="el-icon-microphone" @mousedown="startVoiceRecognition()"
-                    @mouseup="stopVoiceRecognition()"></el-button>
+                <el-button type="primary" icon="el-icon-microphone" @click="audioChangeWord()"><span
+                        v-if="isListening">语音识别中...</span><span v-else></span>
+                </el-button>
             </div>
         </div>
+
+
+        <!-- <div>
+            <el-page-header content="语音转文字" />
+            <div class="bank"></div>
+            <el-card header="语音转文字">
+                <el-card>
+                    <el-input :readonly="true" id="word" v-model="word"></el-input>
+                </el-card>
+                <el-card>
+                    <el-button type="primary" icon="el-icon-microphone" @click="audioCHangeWord"><span
+                            v-if="isListening">语音识别中...</span><span v-else>语音识别</span>
+                    </el-button>
+                </el-card>
+            </el-card>
+        </div> -->
+
     </div>
 </template>
 
@@ -37,8 +55,13 @@
 import api from '@/api/user';
 
 export default {
+    name: "AudioToWord",
+
     data() {
         return {
+            word: "",
+            isListening: false, // 判断是否在语音监听中
+
             Question: {
                 Question: '',
             },
@@ -86,32 +109,66 @@ export default {
         };
     },
     methods: {
+        audioChangeWord() {
+            var that = this;
+            that.word = "";
+            // 创建SpeechRecognition对象
+            // eslint-disable-next-line no-undef
+            var recognition = new webkitSpeechRecognition();
+            if (!recognition) {
+                // eslint-disable-next-line no-undef
+                recognition = new SpeechRecognition();
+            }
+            // 设置语言
+            recognition.lang = 'zh-CN';
+            // 开始语音识别
+            recognition.start();
+            that.isListening = true;
+            // 监听识别结果
+            recognition.onresult = function (event) {
+                var result = event.results[0][0].transcript;
+                that.word = result;
+                that.userInput = result;
+                // that.sendMessage(); 
+            };
+
+            // 监听错误事件
+            recognition.onerror = function (event) {
+                that.isListening = false;
+                that.$message("监听语音失败:" + event.error);
+                console.error(event.error);
+            };
+            // 监听结束事件（包括识别成功、识别错误和用户停止）
+            recognition.onend = function () {
+                that.isListening = false;
+                console.log("语音识别停止");
+            };
+        },
+
+
         sendMessage() {
             if (this.userInput.trim() === '') return;
 
             this.messages.push({ role: 'user', content: this.userInput });
 
-            const userMessage = this.userInput;
-
             this.Question.Question = this.userInput;
+            this.speak(this.userInput);
 
             this.userInput = ''; // 清空输入框
-
-            this.speak(userMessage);
 
             api.aiChat(this.Question).then(response => {
                 const res = response;
                 if (res.code === 20000) {
                     this.$message({
-                      showClose: true,
-                      message: '发送成功！',
-                      type: 'success',
+                        showClose: true,
+                        message: '发送成功！',
+                        type: 'success',
                     });
 
                     const reply = res.data.Answer;
                     this.messages.push({ role: 'assistant', content: reply });
                     this.speak(reply);
-                    
+
                 } else {
                     this.$message.error('获取失败，请重试');
                 }
@@ -137,7 +194,7 @@ export default {
                 console.error('Error:', err);
             });
         },
-        
+
         speak(text) {
             if ('speechSynthesis' in window) {
                 this.voices = window.speechSynthesis.getVoices();
