@@ -24,6 +24,11 @@
                 </div>
             </div>
             <div class="input-container">
+                <select v-model="value">
+                    <option v-for="option in options" :key="option.value" :value="option.value">
+                        {{ option.label }}
+                    </option>
+                </select>
                 <input v-model="userInput" @keyup.enter="sendMessage" placeholder="发送消息..." />
                 <el-button type="primary" icon="el-icon-position" @click="sendMessage()">发送</el-button>
                 <el-button type="primary" icon="el-icon-microphone" @click="audioChangeWord()"><span
@@ -31,22 +36,6 @@
                 </el-button>
             </div>
         </div>
-
-
-        <!-- <div>
-            <el-page-header content="语音转文字" />
-            <div class="bank"></div>
-            <el-card header="语音转文字">
-                <el-card>
-                    <el-input :readonly="true" id="word" v-model="word"></el-input>
-                </el-card>
-                <el-card>
-                    <el-button type="primary" icon="el-icon-microphone" @click="audioCHangeWord"><span
-                            v-if="isListening">语音识别中...</span><span v-else>语音识别</span>
-                    </el-button>
-                </el-card>
-            </el-card>
-        </div> -->
 
     </div>
 </template>
@@ -59,6 +48,13 @@ export default {
 
     data() {
         return {
+            options: [
+                { value: 1, label: '普通话男声' },
+                { value: 2, label: '普通话女声' },
+                { value: 4, label: '粤语男声' },
+                { value: 5, label: '粤语女声' }
+            ],
+            value: '',
             word: "",
             isListening: false, // 判断是否在语音监听中
 
@@ -197,12 +193,32 @@ export default {
 
         speak(text) {
             if ('speechSynthesis' in window) {
-                this.voices = window.speechSynthesis.getVoices();
+                const voices = window.speechSynthesis.getVoices();
                 const utterance = new SpeechSynthesisUtterance(text);
-                // 1吐字最清晰,5,6
-                utterance.voice = this.voices[1];
+
+                let voiceIndex;
+                switch (this.value) {
+                    case 1:
+                        voiceIndex = 0; // 假设普通话男声的索引是0
+                        break;
+                    case 2:
+                        voiceIndex = 1; // 假设普通话女声的索引是1
+                        break;
+                    case 4:
+                        voiceIndex = 2; // 假设粤语男声的索引是2
+                        break;
+                    case 5:
+                        voiceIndex = 3; // 假设粤语女声的索引是3
+                        break;
+                    default:
+                        voiceIndex = 0; // 默认选择普通话男声
+                }
+
+                utterance.voice = voices[voiceIndex];
                 utterance.lang = 'zh-CN';
                 window.speechSynthesis.speak(utterance);
+                this.speak(this.messages[0].content);
+
             } else {
                 console.warn('当前浏览器不支持语音合成');
             }
