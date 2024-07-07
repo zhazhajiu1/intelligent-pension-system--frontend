@@ -1,3 +1,5 @@
+// store/modules/permission.js
+
 import { asyncRoutes, constantRoutes } from '@/router'
 
 const state = {

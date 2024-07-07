@@ -44,20 +44,27 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/',
+    redirect: '/login', // 默认重定向到登录页面
+    hidden: true
+  },
+  {
     path: '/404',
     component: NotFound,
     hidden: true
   },
   {
-    path: '/',
+    path: '/dashboard',
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: Dashboard,
-      meta: { title: '首页', icon: 'dashboard' }
-    }]
+    redirect: '/dashboard/index',
+    children: [
+      {
+        path: 'index',
+        name: 'Dashboard',
+        component: Dashboard,
+        meta: { title: '首页', icon: 'dashboard' }
+      }
+    ]
   },
   {
     path: '/userInfo',

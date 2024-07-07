@@ -134,7 +134,7 @@ export default {
               this.loading = true;
 
               // 跳转到首页
-              this.$router.push('/');
+              this.$router.push('/dashboard');
             })
             .catch(err => {
               console.error('登录失败:', err);

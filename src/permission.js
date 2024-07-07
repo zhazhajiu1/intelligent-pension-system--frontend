@@ -19,7 +19,7 @@ router.beforeEach(async (to, from, next) => {
   // 获取 token
   const token = localStorage.getItem('token')
 
-  if (process.env.NODE_ENV === !'development') {
+  if (process.env.NODE_ENV === 'development') {
     // 如果是开发环境，直接跳过登录验证
     next()
     NProgress.done()
