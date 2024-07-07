@@ -25,14 +25,51 @@ import api from '@/api/video';
 export default {
     data() {
         return {
+            ws: null,
             videoSource: '',
-            videoSource_local: '',
             title: '监控视频',
             isVideoFetching: false // 初始状态为 false
         };
     },
 
+    mounted() {
+        this.connectWebSocket();
+    },
+
     methods: {
+
+        connectWebSocket() {
+            this.ws = new WebSocket('ws://your_domain/ws/your_url/');
+
+            this.ws.onopen = () => {
+                console.log('WebSocket连接成功');
+            };
+
+            this.ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'fall_alert') {
+                    this.handleFallAlert(data.message);
+                }
+            };
+
+            this.ws.onclose = () => {
+                console.log('WebSocket连接关闭');
+                // 重新连接
+                setTimeout(() => this.connectWebSocket(), 1000);
+            };
+        },
+        handleFallAlert(message) {
+            this.$alert(message, '警告', {
+                confirmButtonText: '确定',
+                callback: () => {
+                    console.log('弹窗关闭');
+                }
+            });
+
+            const audio = new Audio('path/to/alert/sound.mp3');
+            audio.play();
+        },
+
         async getSRC() {
             if (this.isVideoFetching) return; // 如果已经在获取视频源，则不执行获取
 

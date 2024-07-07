@@ -51,6 +51,14 @@ export default {
     })
   },
 
+  getURL6(data) {
+    return request({
+      url: '/video/getUrl6',
+      method: 'get',
+      params: data
+    })
+  },
+
   sendCoordinates(data) {
     return request({
       url: '/video/getXY',
