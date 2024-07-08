@@ -5,7 +5,7 @@
             <el-row>
                 <el-col :span="20">
                     <div class="block">
-                        <h1>{{ userInfo.UserName }}的开心时刻</h1>
+                        <h1>{{ userInfo.UserName }}的{{ userInfo.Type }}时刻</h1>
 
                         <el-divider></el-divider>
                         <!-- 显示图片 -->
@@ -134,7 +134,6 @@
 <script>
 import * as echarts from 'echarts';
 import api from '@/api/historyData'
-import { Line } from 'chart.js'
 
 export default {
     data() {
@@ -160,18 +159,6 @@ export default {
                 ID: '',
             },
 
-            editForm: {
-                UserName: '',
-                Phone: '',
-                Sex: '',
-                Age: '',
-                Birthday: '',
-                Healthy: '',
-                GuardianName: '',
-                GuardianPhone: '',
-                ImgUrl: '',
-            },
-
             userInfo: {
                 // ElderlyID: '',
                 ElderlyUrl: '',
@@ -191,6 +178,7 @@ export default {
                 Healthy: '',
                 GuardianName: '',
                 GuardianPhone: '',
+                Type: '',
             },
 
             charts: null,
@@ -231,12 +219,14 @@ export default {
                         name: record.UserName,
                         health: record.Healthy,
                         Created: record.Created,
+                        Type: record.Type,
                     }));
 
                     this.emotionInfo = userData;
                     this.total = res.data.total; // 更新总记录数
 
                     this.updateHappinessChart();
+                    
                 } else {
                     this.$message.error('获取失败，请重试');
                 }
@@ -364,6 +354,7 @@ export default {
                         GuardianPhone: record.GuardianPhone,
                         ElderlyUrl: record.ElderlyUrl,
                         ElderlyCreated: record.ElderlyCreated,
+                        Type: record.Type,
                     };
 
                     this.form1.UserName = record.ElderlyName;
