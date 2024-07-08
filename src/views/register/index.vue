@@ -12,8 +12,7 @@
       </header>
     </article>
     <section>
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" autocomplete="off" size="medium"
-        style="position: relative; top:50px; left: 500px;">
+      <el-form class="sign_class" ref="ruleForm" :model="ruleForm" :rules="rules" >
         <div style="padding-top: 10px">
           <el-form-item label="角色" prop="userrole">
             <el-col :span="5">
@@ -293,10 +292,19 @@ $cursor: #fff;
   }
 }
 
+.sign_class {
+  margin-left: 30%;
+  margin-top: 5%;
+  height: 90%;
+  width: 100%;
+  background-color: #3e4753d5,
+
+}
+
 .register-container {
   .el-input {
     display: inline-block;
-    height: 47px;
+    height: 50px;
     width: 95%;
 
     input {
