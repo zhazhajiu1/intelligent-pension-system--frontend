@@ -5,8 +5,7 @@
             <el-row>
                 <el-col :span="20">
                     <div class="block">
-                        <h1>{{ userInfo.UserName }}的{{ userInfo.Type }}时刻</h1>
-
+                        <h1>{{ userInfo.UserName }}的{{ userInfo.Type === '0' ? '开心' : userInfo.Type === '1' ? '惊讶' : '待填写' }}时刻</h1>
                         <el-divider></el-divider>
                         <!-- 显示图片 -->
                         <div v-if="userInfo.Url">
@@ -15,7 +14,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="4"> </el-col>
+                <el-col :span="4"></el-col>
             </el-row>
         </el-card>
 
@@ -23,8 +22,7 @@
 
         <el-card>
             <el-descriptions class="margin-top" title="详情信息" :column="3" border>
-                <template slot="extra">
-                </template>
+                <template slot="extra"></template>
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-user"></i>
@@ -32,7 +30,6 @@
                     </template>
                     {{ userInfo.UserName || '待填写' }}
                 </el-descriptions-item>
-
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-date"></i>
@@ -40,7 +37,6 @@
                     </template>
                     {{ userInfo.ElderlyID || '待填写' }}
                 </el-descriptions-item>
-
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-date"></i>
@@ -48,7 +44,6 @@
                     </template>
                     {{ formatDate(userInfo.Created) || '待填写' }}
                 </el-descriptions-item>
-
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-date"></i>
@@ -56,8 +51,6 @@
                     </template>
                     {{ userInfo.Age || '待填写' }}
                 </el-descriptions-item>
-
-
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-user"></i>
@@ -115,9 +108,7 @@
                     {{ formatDate(userInfo.Updated) || '待填写' }}
                 </el-descriptions-item>
             </el-descriptions>
-
             <br><br>
-
         </el-card>
 
         <el-card class="happiness-record-card chart-container" shadow="never">
@@ -125,15 +116,12 @@
                 <div id="happinessChart" style="width: 100%; height: 520px; background: #fff"></div>
             </div>
         </el-card>
-
     </div>
 </template>
 
-
-
 <script>
 import * as echarts from 'echarts';
-import api from '@/api/historyData'
+import api from '@/api/historyData';
 
 export default {
     data() {
@@ -149,18 +137,14 @@ export default {
                     }
                 ]
             },
-
             form1: {
                 UserName: '',
                 Date: '',
             },
-
             form: {
                 ID: '',
             },
-
             userInfo: {
-                // ElderlyID: '',
                 ElderlyUrl: '',
                 ElderlyCreated: '',
                 Url: '',
@@ -180,17 +164,10 @@ export default {
                 GuardianPhone: '',
                 Type: '',
             },
-
             charts: null,
             emotionInfo: [],
-            fileList: [],
-            editDialogVisible: false,
-            tableData: [],
             token: '',
-            pageSize: 5,
-            currentPage: 1,
-            total: 0,
-        }
+        };
     },
     methods: {
         formatDate(date) {
@@ -204,7 +181,6 @@ export default {
             const seconds = String(d.getSeconds()).padStart(2, '0');
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         },
-
         getEmotions() {
             api.getList(this.form1).then(response => {
                 const res = response;
@@ -214,19 +190,8 @@ export default {
                         message: '获取成功！',
                         type: 'success',
                     });
-
-                    const userData = res.data.rows.map(record => ({
-                        name: record.UserName,
-                        health: record.Healthy,
-                        Created: record.Created,
-                        Type: record.Type,
-                    }));
-
-                    this.emotionInfo = userData;
-                    this.total = res.data.total; // 更新总记录数
-
+                    this.emotionInfo = res.data.rows;
                     this.updateHappinessChart();
-                    
                 } else {
                     this.$message.error('获取失败，请重试');
                 }
@@ -235,107 +200,99 @@ export default {
                 this.$message.error('获取失败，请重试');
             });
         },
-
         updateHappinessChart() {
-            const dateCountMap = {};
+            const happyCountMap = {};
+            const surprisedCountMap = {};
             this.emotionInfo.forEach(record => {
                 const date = record.Created.split('T')[0]; // 只取日期部分
-                if (!dateCountMap[date]) {
-                    dateCountMap[date] = 0;
-                }
-                dateCountMap[date]++;
-            });
-            const labels = Object.keys(dateCountMap).sort(); // 日期排序
-            const data = labels.map(date => dateCountMap[date]);
-
-            this.createHappinessChart(labels, data);
-        },
-        createHappinessChart(labels, data) {
-            if (!this.charts) {
-                this.charts = echarts.init(document.getElementById('happinessChart'));
-            }
-            const option = {
-                title: {
-                    left: '3%',
-                    top: '5%',
-                    text: "最近一周情绪变化",
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    align: 'right',
-                    left: '3%',
-                    top: '15%',
-                    data: ['情绪变化']
-                },
-                grid: {
-                    top: '30%',
-                    left: '5%',
-                    right: '5%',
-                    bottom: '5%',
-                    containLabel: true
-                },
-                toolbox: {
-                    feature: {
-                        saveAsImage: {}
+                if (record.Type === '0') {
+                    if (!happyCountMap[date]) {
+                        happyCountMap[date] = 0;
                     }
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: true,
-                    axisTick: {
-                        alignWithLabel: true
-                    },
-                    data: labels
-                },
-                yAxis: {
-                    type: 'value',
-                    boundaryGap: true,
-                    splitNumber: 4,
-                    interval: Math.ceil(Math.max(...data) / 4)
-                },
-                series: [{
-                    name: '情绪变化',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {
-                        color: {
-                            type: 'linear',
-                            x: 0,
-                            y: 0,
-                            x2: 0,
-                            y2: 1,
-                            colorStops: [{
-                                offset: 0, color: 'rgb(255,200,213)'
-                            }, {
-                                offset: 1, color: '#ffffff'
-                            }],
-                            global: false
-                        }
-                    },
-                    itemStyle: {
-                        color: 'rgb(255,96,64)',
-                        lineStyle: {
-                            color: 'rgb(255,96,64)'
-                        }
-                    },
-                    data: data
-                }]
-            };
-            this.charts.setOption(option);
+                    happyCountMap[date]++;
+                } else if (record.Type === '1') {
+                    if (!surprisedCountMap[date]) {
+                        surprisedCountMap[date] = 0;
+                    }
+                    surprisedCountMap[date]++;
+                }
+            });
+            const labels = Object.keys(happyCountMap).sort(); // 日期排序
+            const happyData = labels.map(date => happyCountMap[date]);
+            const surprisedData = labels.map(date => surprisedCountMap[date]);
+            this.createHappinessChart(labels, happyData, surprisedData);
         },
-
+        createHappinessChart(labels, happyData, surprisedData) {
+            this.$nextTick(() => {
+                if (!this.charts) {
+                    this.charts = echarts.init(document.getElementById('happinessChart'));
+                }
+                const option = {
+                    title: {
+                        left: '3%',
+                        top: '5%',
+                        text: "最近一周情绪变化",
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        align: 'right',
+                        left: '3%',
+                        top: '15%',
+                        data: ['高兴', '惊讶']
+                    },
+                    grid: {
+                        top: '30%',
+                        left: '5%',
+                        right: '5%',
+                        bottom: '5%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: true,
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        data: labels
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: '高兴',
+                            type: 'line',
+                            smooth: true,
+                            data: happyData,
+                            itemStyle: {
+                                color: '#4caf50'
+                            }
+                        },
+                        {
+                            name: '惊讶',
+                            type: 'line',
+                            smooth: true,
+                            data: surprisedData,
+                            itemStyle: {
+                                color: '#f44336'
+                            }
+                        }
+                    ]
+                };
+                this.charts.setOption(option);
+            });
+        },
         getElderly() {
             api.getOne(this.form).then(response => {
                 const res = response; // axios 返回的数据在 response 中
                 if (res.code === 20000) {
-                    // this.$message({
-                    //     showClose: true,
-                    //     message: '获取成功！',
-                    //     type: 'success',
-                    // });
-
                     const record = res.data; // 更新为直接获取 res.data
                     this.userInfo = {
                         ID: record.ID,
@@ -356,30 +313,20 @@ export default {
                         ElderlyCreated: record.ElderlyCreated,
                         Type: record.Type,
                     };
-
                     this.form1.UserName = record.ElderlyName;
                     this.getEmotions();
-
                 } else {
                     this.$message.error('获取失败，请重试');
                 }
             }).catch(err => {
-                console.log(err);
+                console.error(err);
                 this.$message.error('获取失败，请重试');
             });
         },
-
-
     },
     mounted() {
         this.token = localStorage.getItem('token') || '';
-        console.log('Retrieved token:', this.token);
-
         this.form.ID = this.$route.params.id;
-        console.log("ID", this.$route.params.id);
-
-        console.log("ID", this.form.ID);
-
         if (!this.token) {
             console.error('TOKEN is not found in localStorage');
         } else {
@@ -389,15 +336,8 @@ export default {
 }
 </script>
 
-
 <style scoped>
 .chart-container {
-    height: 500px;
-    width: 100%;
-}
-
-#happinessChart {
-    width: 100% !important;
-    height: auto !important;
+    height: 600px;
 }
 </style>
