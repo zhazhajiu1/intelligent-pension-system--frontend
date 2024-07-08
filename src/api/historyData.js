@@ -97,9 +97,21 @@ export default {
     })
   },
 
+  fireDelete(id) {
+    return request({
+      url: `/video/fireDelete`,
+      method: 'delete',
+      params: id
+    })
+  },
 
-
-
+  getFireList(data) {
+    return request({
+      url: '/video/fireList',
+      method: 'get',
+      params: data
+    })
+  },
 
 }
 

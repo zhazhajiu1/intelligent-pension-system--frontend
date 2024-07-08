@@ -25,6 +25,7 @@ import InteractionIndex from '@/views/historyData/interactionIndex.vue'
 import Fall from '@/views/video/fall.vue'
 import AIChat from '@/views/aiChat/index.vue'
 import Fire from '@/views/video/fire.vue'
+import FireIndex from '@/views/historyData/fireIndex.vue'
 
 Vue.use(Router)
 
@@ -207,6 +208,12 @@ export const asyncRoutes = [
         name: 'interactionIndex',
         component: InteractionIndex,
         meta: { title: '交互记录', icon: 'el-icon-s-data' }
+      },
+      {
+        path: 'fireIndex',
+        name: 'fireIndex',
+        component: FireIndex,
+        meta: { title: '火源记录', icon: 'el-icon-s-data' }
       }
     ]
   },

@@ -11,6 +11,11 @@
               value-format="yyyy-MM-dd" required>
             </el-date-picker>
 
+            <el-select v-model="value" placeholder="请选择">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+
             <el-button type="primary" round icon="el-icon-search" @click="getEmotions()">查询</el-button>
           </div>
         </el-col>
@@ -29,7 +34,7 @@
           <template slot-scope="scope">
             <el-button @click="viewDetail(scope.row.id)" type="text" size="small">查看</el-button>
             <el-button @click="deleteStaff(scope.row.id)" type="text" size="small" style="color: red;"
-            :disabled="role !== '0'">删除</el-button>
+              :disabled="role !== '0'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -50,6 +55,15 @@ import api from '@/api/historyData'
 export default {
   data() {
     return {
+      options: [{
+        value: 'happy',
+        label: '开心'
+      }, {
+        value: 'surprised',
+        label: '惊吓'
+      }],
+      value: '',
+
       id_delete: {
         ID: '',
       },
@@ -170,7 +184,7 @@ export default {
     this.token = localStorage.getItem('token') || '';
     this.role = localStorage.getItem('roles') || '';
     console.log('role:', this.role);
-    
+
     if (!this.token) {
       console.error('TOKEN is not found in localStorage');
     } else {

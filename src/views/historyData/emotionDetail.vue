@@ -120,11 +120,11 @@
 
         </el-card>
 
-        <el-card class="happiness-record-card" shadow="never">
+        <el-card class="happiness-record-card chart-container" shadow="never">
             <el-row>
                 <el-col :span="24">
                     <h2>高兴记录</h2>
-                    <canvas id="happinessChart"></canvas>
+                    <div id="happinessChart" class="chart"></div>
                 </el-col>
             </el-row>
         </el-card>
@@ -132,7 +132,10 @@
     </div>
 </template>
 
+
+
 <script>
+import * as echarts from 'echarts';
 import api from '@/api/historyData'
 import { Line } from 'chart.js'
 
@@ -235,7 +238,7 @@ export default {
                     this.emotionInfo = userData;
                     this.total = res.data.total; // 更新总记录数
 
-                    this.updateHappinessChart(); // 更新图表数据
+                    this.updateHappinessChart();
                 } else {
                     this.$message.error('获取失败，请重试');
                 }
@@ -247,7 +250,6 @@ export default {
 
         updateHappinessChart() {
             const dateCountMap = {};
-
             this.emotionInfo.forEach(record => {
                 const date = record.Created.split('T')[0]; // 只取日期部分
                 if (!dateCountMap[date]) {
@@ -255,33 +257,30 @@ export default {
                 }
                 dateCountMap[date]++;
             });
+            const labels = Object.keys(dateCountMap).sort(); // 日期排序
+            const data = labels.map(date => dateCountMap[date]);
 
-            this.happinessData.labels = Object.keys(dateCountMap).sort(); // 日期排序
-            this.happinessData.datasets[0].data = this.happinessData.labels.map(date => dateCountMap[date]);
-
-            this.createHappinessChart();
+            this.createHappinessChart(labels, data);
         },
-
-        createHappinessChart() {
-            new Line(document.getElementById('happinessChart'), {
-                data: this.happinessData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    title: {
-                        display: true,
-                        text: '每日高兴次数'
+        createHappinessChart(labels, data) {
+            const chartDom = document.getElementById('happinessChart');
+            const myChart = echarts.init(chartDom);
+            const option = {
+                xAxis: {
+                    type: 'category',
+                    data: labels,
+                },
+                yAxis: {
+                    type: 'value',
+                },
+                series: [
+                    {
+                        data: data,
+                        type: 'line',
                     },
-                    scales: {
-                        x: {
-                            type: 'time',
-                            time: {
-                                unit: 'day'
-                            }
-                        }
-                    }
-                }
-            });
+                ],
+            };
+            myChart.setOption(option);
         },
 
         getElderly() {
@@ -378,15 +377,20 @@ export default {
     /* 确保卡片有足够的高度 */
 }
 
-/* 设置图表容器的高度 */
+.hidden {
+    display: none;
+}
+
+.chart-container {
+    height: 500px;
+    /* 修改这个值来设置容器的高度 */
+    width: 100%;
+}
+
+/* 移除canvas的高度设置 */
 canvas#happinessChart {
     width: 100% !important;
-    height: 90px !important;
-    /* 设置图表高度 */
+    height: auto !important;
+    /* 确保canvas高度自动调整 */
 }
-
-.hidden {
-  display: none;
-}
-
 </style>
