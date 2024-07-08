@@ -267,12 +267,12 @@ export default {
 
           const user = {
             UserRole: this.ruleForm.userrole,
-            UserSex: this.ruleForm.usersex,
+            Sex: this.ruleForm.usersex,
             UserName: this.ruleForm.username,
             UserAge: this.ruleForm.userage,
-            UserPhone: this.ruleForm.phone,
-            UserPwd: this.ruleForm.pwd,
-            YunURL: this.ruleForm.yun_url,
+            Phone: this.ruleForm.phone,
+            Password: this.ruleForm.pwd,
+            ImgUrl: this.ruleForm.yun_url,
           }
 
           api.register(user).then(res => {
