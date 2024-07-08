@@ -24,6 +24,7 @@ import Interaction from '@/views/video/Interaction.vue'
 import InteractionIndex from '@/views/historyData/interactionIndex.vue'
 import Fall from '@/views/video/fall.vue'
 import AIChat from '@/views/aiChat/index.vue'
+import Fire from '@/views/video/fire.vue'
 
 Vue.use(Router)
 
@@ -102,7 +103,13 @@ export const constantRoutes = [
         path: 'interaction',
         name: 'interaction',
         component: Interaction,
-        meta: { title: '交互检测', icon: 'el-icon-video-camera' }
+        meta: { title: '交互监测', icon: 'el-icon-video-camera' }
+      },
+      {
+        path: 'fire',
+        name: 'fire',
+        component: Fire,
+        meta: { title: '火灾监测', icon: 'el-icon-video-camera' }
       }
     ]
   }
