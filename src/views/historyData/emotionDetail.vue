@@ -121,12 +121,9 @@
         </el-card>
 
         <el-card class="happiness-record-card chart-container" shadow="never">
-            <el-row>
-                <el-col :span="24">
-                    <h2>高兴记录</h2>
-                    <div id="happinessChart" class="chart"></div>
-                </el-col>
-            </el-row>
+            <div id="happinessChartContainer">
+                <div id="happinessChart" style="width: 100%; height: 520px; background: #fff"></div>
+            </div>
         </el-card>
 
     </div>
@@ -196,6 +193,7 @@ export default {
                 GuardianPhone: '',
             },
 
+            charts: null,
             emotionInfo: [],
             fileList: [],
             editDialogVisible: false,
@@ -263,24 +261,79 @@ export default {
             this.createHappinessChart(labels, data);
         },
         createHappinessChart(labels, data) {
-            const chartDom = document.getElementById('happinessChart');
-            const myChart = echarts.init(chartDom);
+            if (!this.charts) {
+                this.charts = echarts.init(document.getElementById('happinessChart'));
+            }
             const option = {
+                title: {
+                    left: '3%',
+                    top: '5%',
+                    text: "最近一周情绪变化",
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    align: 'right',
+                    left: '3%',
+                    top: '15%',
+                    data: ['情绪变化']
+                },
+                grid: {
+                    top: '30%',
+                    left: '5%',
+                    right: '5%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
                 xAxis: {
                     type: 'category',
-                    data: labels,
+                    boundaryGap: true,
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    data: labels
                 },
                 yAxis: {
                     type: 'value',
+                    boundaryGap: true,
+                    splitNumber: 4,
+                    interval: Math.ceil(Math.max(...data) / 4)
                 },
-                series: [
-                    {
-                        data: data,
-                        type: 'line',
+                series: [{
+                    name: '情绪变化',
+                    type: 'line',
+                    stack: '总量',
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgb(255,200,213)'
+                            }, {
+                                offset: 1, color: '#ffffff'
+                            }],
+                            global: false
+                        }
                     },
-                ],
+                    itemStyle: {
+                        color: 'rgb(255,96,64)',
+                        lineStyle: {
+                            color: 'rgb(255,96,64)'
+                        }
+                    },
+                    data: data
+                }]
             };
-            myChart.setOption(option);
+            this.charts.setOption(option);
         },
 
         getElderly() {
@@ -345,52 +398,15 @@ export default {
 }
 </script>
 
+
 <style scoped>
-#search .el-input {
-    width: 200px;
-    margin-right: 10px;
-}
-
-.el-dialog .el-input {
-    width: 60%;
-}
-
-.el-descriptions__label {
-    font-weight: bold;
-}
-
-.el-descriptions-item__content {
-    padding: 0 10px;
-}
-
-#search {
-    margin-bottom: 20px;
-}
-
-.el-card {
-    margin-bottom: 20px;
-    padding: 20px;
-}
-
-.happiness-record-card {
-    height: 300px;
-    /* 确保卡片有足够的高度 */
-}
-
-.hidden {
-    display: none;
-}
-
 .chart-container {
     height: 500px;
-    /* 修改这个值来设置容器的高度 */
     width: 100%;
 }
 
-/* 移除canvas的高度设置 */
-canvas#happinessChart {
+#happinessChart {
     width: 100% !important;
     height: auto !important;
-    /* 确保canvas高度自动调整 */
 }
 </style>

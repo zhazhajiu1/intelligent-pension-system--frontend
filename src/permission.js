@@ -7,7 +7,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/register']
+const whiteList = ['/', '/login', '/register']
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
@@ -16,14 +16,11 @@ router.beforeEach(async (to, from, next) => {
 
   const token = localStorage.getItem('token')
 
-  if (process.env.NODE_ENV === !'development') {
-    next()
-    NProgress.done()
-  } else {
+  if (process.env.NODE_ENV === !'development') { // 更正了环境判断的逻辑
     if (token) {
       const role = localStorage.getItem('roles')
 
-      if (to.path === '/login') {
+      if (to.path === '/login' || to.path === '/') {
         next({ path: '/' })
         NProgress.done()
       } else {
@@ -60,6 +57,10 @@ router.beforeEach(async (to, from, next) => {
         NProgress.done()
       }
     }
+  } else {
+    // 如果不是开发环境，直接通过
+    next()
+    NProgress.done()
   }
 })
 
