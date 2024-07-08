@@ -3,7 +3,7 @@
     <el-container class="container">
       <el-main class="left">
         <div class="video-container">
-          <div>情绪监测摄像头：</div>
+          <div>人脸录入摄像头：</div>
           <div>
             <img :src="videoSource" style="width: 100%; height: 100%">
           </div>
@@ -11,11 +11,11 @@
           <el-divider></el-divider>
           <el-card class="box-card">
 
-            <el-input v-model="this.form.UserName" placeholder="请输入姓名" />
+            <el-input v-model="form.UserName" placeholder="请输入姓名"></el-input>
             <br><br>
 
             <el-button @click="getSRC">开始录入</el-button>
-            <el-button @click="stopSRC">停止结束</el-button>
+            <el-button @click="stopSRC">停止录入</el-button>
           </el-card>
         </div>
       </el-main>
