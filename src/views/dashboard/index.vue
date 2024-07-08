@@ -16,7 +16,7 @@
           <el-col :span="12">
             <el-card class="chart-card">
               <h2>健康状况</h2>
-              <canvas id="healthStatusChart" class="chart-canvas"></canvas>
+              <div id="healthStatusChart" class="chart-canvas"></div>
             </el-card>
           </el-col>
         </el-row>
@@ -38,7 +38,6 @@
             </el-card>
           </el-col>
         </el-row>
-
       </el-main>
     </el-container>
   </div>
@@ -48,7 +47,8 @@
 import api from '@/api/eld'
 import api1 from '@/api/staff'
 import api2 from '@/api/volunteer'
-import { Bar, Pie } from 'chart.js';
+import { Bar } from 'chart.js';
+import * as echarts from 'echarts';
 import 'element-ui/lib/theme-chalk/index.css';
 import { Container, Header, Main, Row, Col, Card } from 'element-ui';
 
@@ -70,7 +70,6 @@ export default {
         Phone: '',
       },
       total: '',
-
       elderAgeDistributionData: {
         labels: ['60-70', '70-80', '80-90', '90以上'],
         datasets: [
@@ -101,16 +100,7 @@ export default {
           },
         ],
       },
-      healthStatusData: {
-        labels: ['健康', '良好', '及格', '疾病', '严重'],
-        datasets: [
-          {
-            label: '人数',
-            backgroundColor: ['#66BB6A', '#FFA726', '#FFEE58', '#FF7043', '#D32F2F'],
-            data: [0, 0, 0, 0, 0], // 初始化数据
-          },
-        ],
-      },
+      healthStatusData: [],
     };
   },
   mounted() {
@@ -201,15 +191,21 @@ export default {
       this.elderAgeDistributionData.datasets[0].data = ageGroups;
 
       // 健康状况统计
-      const healthStatusCounts = [0, 0, 0, 0, 0];
+      const healthStatusCounts = [
+        { name: '健康', value: 0 },
+        { name: '良好', value: 0 },
+        { name: '及格', value: 0 },
+        { name: '疾病', value: 0 },
+        { name: '严重', value: 0 },
+      ];
       userData.forEach(user => {
-        if (user.health === '健康') healthStatusCounts[0]++;
-        else if (user.health === '良好') healthStatusCounts[1]++;
-        else if (user.health === '及格') healthStatusCounts[2]++;
-        else if (user.health === '疾病') healthStatusCounts[3]++;
-        else if (user.health === '严重') healthStatusCounts[4]++;
+        if (user.health === '健康') healthStatusCounts[0].value++;
+        else if (user.health === '良好') healthStatusCounts[1].value++;
+        else if (user.health === '及格') healthStatusCounts[2].value++;
+        else if (user.health === '疾病') healthStatusCounts[3].value++;
+        else if (user.health === '严重') healthStatusCounts[4].value++;
       });
-      this.healthStatusData.datasets[0].data = healthStatusCounts;
+      this.healthStatusData = healthStatusCounts;
 
       this.createElderAgeDistributionChart();
       this.createHealthStatusChart();
@@ -254,9 +250,8 @@ export default {
         options: {
           responsive: true,
           scales: {
-            y: {
-              beginAtZero: true,
-            },
+            x: { display: true },
+            y: { display: true, beginAtZero: true }
           },
         },
       });
@@ -269,9 +264,8 @@ export default {
         options: {
           responsive: true,
           scales: {
-            y: {
-              beginAtZero: true,
-            },
+            x: { display: true },
+            y: { display: true, beginAtZero: true }
           },
         },
       });
@@ -284,44 +278,64 @@ export default {
         options: {
           responsive: true,
           scales: {
-            y: {
-              beginAtZero: true,
-            },
+            x: { display: true },
+            y: { display: true, beginAtZero: true }
           },
         },
       });
     },
 
     createHealthStatusChart() {
-      new Bar(document.getElementById('healthStatusChart'), {
-        data: this.healthStatusData,
-        options: {
-          responsive: true,
-          title: {
-            display: true,
-            text: '老年人健康状况',
-          },
+      const chartDom = document.getElementById('healthStatusChart');
+      const myChart = echarts.init(chartDom);
+      const option = {
+        title: {
+          text: '健康状况分布',
+          left: 'center'
         },
-      });
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+        },
+        series: [
+          {
+            name: '健康状况',
+            type: 'pie',
+            radius: '50%',
+            data: this.healthStatusData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      option && myChart.setOption(option);
     },
   },
 };
-
 </script>
 
+
 <style>
-#app {
+/* #app {
   padding: 20px;
-}
+} */
 
 .chart-card {
-  height: 400px;
+  height: 420px;
 }
 
 .chart-canvas {
   width: 100%;
-  height: 100%;
+  height: 400px;
   border: none;
-  /* 确保没有边框 */
 }
+
 </style>

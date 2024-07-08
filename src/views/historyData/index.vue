@@ -56,10 +56,10 @@ export default {
   data() {
     return {
       options: [{
-        value: 'happy',
+        value: '0',
         label: '开心'
       }, {
-        value: 'surprised',
+        value: '1',
         label: '惊吓'
       }],
       value: '',
@@ -70,6 +70,7 @@ export default {
       form: {
         UserName: '',
         Date: '',
+        Type: '',
       },
       tableData: [],
       pagedTableData: [],
@@ -95,6 +96,8 @@ export default {
     },
 
     getEmotions() {
+      this.form.Type = this.value;
+      
       const params = {
         ...this.form,
       };
