@@ -2,9 +2,9 @@
   <div class="register-container">
     <article class="header">
       <header>
-        <el-avatar icon="el-icon-user-solid" shape="circle" />
+        <el-avatar icon="el-icon-user-solid" shape="circle" style="margin-left: 10px; margin-top: 10px;" />
         <span class="login">
-          <em class="bold">已有账号？</em>
+          <em class="bold" style="margin-left: 980px">已有账号？</em>
           <router-link to="/login">
             <el-button type="primary" size="mini">登录</el-button>
           </router-link>
@@ -12,81 +12,69 @@
       </header>
     </article>
     <section>
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" autocomplete="off" size="medium"
-        style="position: relative; top:50px; left: 500px;">
-        <div style="padding-top: 10px">
-          <el-form-item label="角色" prop="userrole">
-            <el-col :span="5">
-              <el-radio v-model="ruleForm.userrole" label="2">义工</el-radio>
-              <el-radio v-model="ruleForm.userrole" label="1">员工</el-radio>
-            </el-col>
-          </el-form-item>
-          <el-form-item v-if="ruleForm.userrole === '2'" label="上传图片">
-            <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
-              :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
-              :http-request="handleUploadRequest" accept="image/*">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-            </el-upload>
-          </el-form-item>
-
-          <el-form-item label="手机号码" prop="phone">
-            <el-col :span="5">
-              <el-input v-model="ruleForm.phone" placeholder="请输入您的手机号码" />
-            </el-col>
-            <el-col :span="5">
-              <div class="error">{{ error }}</div>
-            </el-col>
-          </el-form-item>
-
-          <el-form-item label="用户名" prop="username">
-            <el-col :span="5">
-              <el-input v-model="ruleForm.username" placeholder="请输入您的用户名" />
-            </el-col>
-          </el-form-item>
-
-          <el-form-item label="年龄" prop="userage">
-            <el-col :span="5">
-              <el-input v-model="ruleForm.userage" placeholder="请输入您的年龄" />
-            </el-col>
-          </el-form-item>
-
-          <el-form-item label="性别" prop="usersex">
-            <el-col :span="5">
-              <el-radio v-model="ruleForm.usersex" label="f">女</el-radio>
-              <el-radio v-model="ruleForm.usersex" label="m">男</el-radio>
-            </el-col>
-          </el-form-item>
-
-          <el-form-item label="密码" prop="pwd">
-            <el-col :span="5">
-              <el-input v-model="ruleForm.pwd" type="password" />
-            </el-col>
-          </el-form-item>
-
-          <el-form-item label="确认密码" prop="cpwd">
-            <el-col :span="5">
-              <el-input v-model="ruleForm.cpwd" type="password" />
-            </el-col>
-          </el-form-item>
-
-          <el-form-item label="验证码" prop="code">
-            <el-col :span="5">
-              <el-input v-model="ruleForm.code" maxlength="4" placeholder="请输入验证码" />
-            </el-col>
-            <el-col :span="5">
-              <div width="100%" @click="refreshCode">
-                <s-identify :identifyCode="identifyCode" style="margin-top: 4px"></s-identify>
-              </div>
-            </el-col>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" style="width: 20%" @click="register">注册</el-button>
-          </el-form-item>
-        </div>
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" autocomplete="off" size="medium" class="login-form">
+        <el-form-item label="角色" prop="userrole">
+          <el-col :span="24">
+            <el-radio v-model="ruleForm.userrole" label="2">义工</el-radio>
+            <el-radio v-model="ruleForm.userrole" label="1">员工</el-radio>
+          </el-col>
+        </el-form-item>
+        <el-form-item v-if="ruleForm.userrole === '2'" label="上传图片">
+          <el-upload class="upload-demo" ref="upload" action="https://example.com/upload" :auto-upload="false"
+            :file-list="fileList" :on-change="handleFileChange" :on-remove="handleFileRemove"
+            :http-request="handleUploadRequest" accept="image/*">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="手机号码" prop="phone">
+          <el-col :span="24">
+            <el-input v-model="ruleForm.phone" placeholder="请输入您的手机号码" />
+            <div class="error">{{ error }}</div>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="用户名" prop="username">
+          <el-col :span="24">
+            <el-input v-model="ruleForm.username" placeholder="请输入您的用户名" />
+          </el-col>
+        </el-form-item>
+        <el-form-item label="年龄" prop="userage">
+          <el-col :span="24">
+            <el-input v-model="ruleForm.userage" placeholder="请输入16-60的数字" />
+          </el-col>
+        </el-form-item>
+        <el-form-item label="性别" prop="usersex">
+          <el-col :span="24">
+            <el-radio v-model="ruleForm.usersex" label="f">女</el-radio>
+            <el-radio v-model="ruleForm.usersex" label="m">男</el-radio>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="密码" prop="pwd">
+          <el-col :span="24">
+            <el-input v-model="ruleForm.pwd" type="password" placeholder="请输入密码" />
+          </el-col>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="cpwd">
+          <el-col :span="24">
+            <el-input v-model="ruleForm.cpwd" type="password" placeholder="请再次输入密码" />
+          </el-col>
+        </el-form-item>
+        <el-form-item label="验证码" prop="code">
+          <br>
+          <el-col :span="20">
+            <el-input v-model="ruleForm.code" maxlength="4" placeholder="请输入验证码" />
+          </el-col>
+          <el-col :span="4">
+            <div width="100%" @click="refreshCode">
+              <s-identify :identifyCode="identifyCode" style="margin-left: 5px"></s-identify>
+            </div>
+          </el-col>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="width: 100%" @click="register">注册</el-button>
+        </el-form-item>
       </el-form>
     </section>
-
     <div class="error">{{ error }}</div>
   </div>
 </template>
@@ -146,6 +134,26 @@ export default {
           {
             pattern: /^1\d{10}$/,
             message: '手机号码格式不正确',
+            trigger: 'blur'
+          }
+        ],
+        userage: [
+          {
+            required: true,
+            // type: 'string',
+            message: '请输入年龄',
+            trigger: 'blur'
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                callback(new Error('请输入年龄'));
+              } else if (!/^(?:1[6-9]|[2-5][0-9]|60)$/.test(value)) {
+                callback(new Error('年龄必须在16到60岁之间'));
+              } else {
+                callback();
+              }
+            },
             trigger: 'blur'
           }
         ],
@@ -241,6 +249,9 @@ export default {
       return Math.floor(Math.random() * (max - min) + min)
     },
     register() {
+      // Convert userage to a number
+      this.ruleForm.userage = parseInt(this.ruleForm.userage);
+
       if (this.ruleForm.code.toLowerCase() !== this.identifyCode.toLowerCase()) {
         this.$message.error('请填写正确验证码')
         this.refreshCode()
@@ -256,13 +267,14 @@ export default {
 
           const user = {
             UserRole: this.ruleForm.userrole,
+            UserSex: this.ruleForm.usersex,
             UserName: this.ruleForm.username,
-            Password: this.ruleForm.pwd,
-            Sex: this.ruleForm.usersex,
-            Phone: this.ruleForm.phone,
-            ImgUrl: this.ruleForm.yun_url,
-            Age: this.ruleForm.userage,
+            UserAge: this.ruleForm.userage,
+            UserPhone: this.ruleForm.phone,
+            UserPwd: this.ruleForm.pwd,
+            YunURL: this.ruleForm.yun_url,
           }
+
           api.register(user).then(res => {
             this.$message({
               showClose: true,
@@ -282,115 +294,58 @@ export default {
 }
 </script>
 
-<style lang="scss">
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .register-container .el-input input {
-    color: $cursor;
-  }
-}
-
-.register-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 95%;
-
-    input {
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      -webkit-appearance: none;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
-    }
-  }
-
-  .el-form-item {
-    label {
-      font-style: normal;
-      font-size: 12px;
-      color: $light_gray;
-    }
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-
+<style scoped>
 .register-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
   overflow: hidden;
-
   background-image: url('../../assets/elds3.jpg');
   background-size: 100%;
+}
 
-  .header {
-    border-bottom: 2px solid rgb(235, 232, 232);
-    min-width: 980px;
-    color: #666;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
 
-    header {
-      margin: 0 auto;
-      padding: 10px 0;
-      width: 980px;
+.login {
+  display: flex;
+  align-items: center;
+}
 
-      .login {
-        float: right;
-      }
+.login-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #889aa4;
+  border-radius: 16px;
+}
 
-      .bold {
-        font-style: normal;
-        color: $light_gray;
-      }
-    }
-  }
+.el-form-item {
+  margin-bottom: 20px;
+}
 
-  .section {
-    margin: 0 auto 30px;
-    padding-top: 30px;
-    width: 980px;
-    min-height: 300px;
-    padding-right: 100px;
-    box-sizing: border-box;
+.el-col {
+  display: flex;
+  align-items: center;
+}
 
-    .status {
-      font-size: 12px;
-      margin-left: 20px;
-      color: #e6a23c;
-    }
+.upload-demo .el-upload__input {
+  display: none;
+}
 
-    .error {
-      color: red;
-    }
-  }
+.code-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
 
-  .tips {
-    float: right;
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
+.error {
+  color: red;
+  margin-top: 10px;
 }
 </style>
