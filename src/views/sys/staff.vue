@@ -17,6 +17,8 @@
         <el-col :span="4"> </el-col>
       </el-row>
     </el-card>
+
+    <br>
     
     <!-- 结果列表 -->
     <el-card>

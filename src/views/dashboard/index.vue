@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-header>
-        <h1>欢迎来到IYing养老系统</h1>
+        <h1>欢迎来到I❤Ying养老系统！</h1>
       </el-header>
       <el-main>
         <el-row :gutter="20">
@@ -324,17 +324,17 @@ export default {
 
 
 <style>
-/* #app {
+#app {
   padding: 20px;
-} */
+}
 
 .chart-card {
-  height: 420px;
+  height: 400px;
 }
 
 .chart-canvas {
   width: 100%;
-  height: 400px;
+  height: 300px;
   border: none;
 }
 

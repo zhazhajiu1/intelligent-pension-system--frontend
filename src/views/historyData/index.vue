@@ -23,6 +23,8 @@
       </el-row>
     </el-card>
 
+    <br>
+
     <!-- 结果列表 -->
     <el-card>
       <el-table :data="pagedTableData" border style="width: 95%">
